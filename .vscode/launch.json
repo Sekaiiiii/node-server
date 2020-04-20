@@ -9,8 +9,8 @@
             "runtimeExecutable": "node",
             "program": "${workspaceFolder}\\server.js",
             "restart":true,
-            "console":"integratedTerminal",
-            "internalConsoleOptions": "neverOpen"
+            "console":"internalConsole",
+            "internalConsoleOptions": "openOnFirstSessionStart"
         }
     ]
 }
