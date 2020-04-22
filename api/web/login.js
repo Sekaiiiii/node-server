@@ -15,16 +15,7 @@ router.use(bodyParser.urlencoded());
 router.use(bodyParser.json());
 
 router.post("/",function(req,res){
-    console.log("Hello world!");
-    pool.query("select * from role",function(err,data,fileds){
-        if(err){
-            console.error(err);
-            return;
-        }
-        res.send({
-            'data':data
-        })
-    })
+
 })
 
 module.exports = router;
