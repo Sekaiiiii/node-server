@@ -9,7 +9,6 @@
 const express = require("express");
 const pool = require("../../tool/pool.js");
 
-
 const router = express.Router();
 
 router.all("/",function(req,res){
@@ -18,7 +17,9 @@ router.all("/",function(req,res){
             console.error(err);
             return;
         }
-        console.log(data);
+        res.send({
+            data:"你好啊"
+        })
     })
 })
 
