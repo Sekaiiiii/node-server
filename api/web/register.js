@@ -1,21 +1,17 @@
 /*
  * author:谢奇
  * create_day:2020-04-22
- * modified_day:2020-04-22
+ * modified_day:2020-04-23
  * function:注册用户接口
  */
 'use strict'
 const express = require('express');
 const crypto = require("crypto");
-const bodyParser = require("body-parser");
 
 const resObj = require("../../tool/return_obj.js");
 const pool = require("../../tool/pool.js")
 
 const router = express.Router();
-
-router.use(bodyParser.json());
-router.use(bodyParser.urlencoded());
 
 //参数检查
 router.post("/", function (req, res, next) {
@@ -54,8 +50,8 @@ router.post("/", function (req, res) {
         req.body.name,
         password_md5,
         req.body.mail_address,
-        1,
-        1,
+        0,
+        0,
         3
     ];
     pool.query(sql,[params],function(err,data,fileds){
