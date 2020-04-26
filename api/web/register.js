@@ -29,7 +29,6 @@ router.post("/", function (req, res, next) {
             password_reg.test(req.body.password) &&
             mail_address_reg.test(req.body.mail_address)
         ) {
-            console.log("通过验证");
             next();
         } else {
             res.send(return_obj.fail('101', '传入参数格式不正确'));
@@ -56,10 +55,13 @@ router.post("/", function (req, res) {
     ];
     pool.query(sql,[params],function(err,data,fileds){
         if(err){
-            console.error(err);
-            res.send(return_obj.fail("200","发起数据库请求出错"));
+            if(err.errno == 1062){
+                res.send(return_obj.fail("106","用户名已存在"));
+            }else{
+                console.error(err);
+                res.send(return_obj.fail("200","发起数据库请求出错"));
+            }
         }else{
-            console.log(data);
             res.send(return_obj.success({"msg":"注册用户成功"}));
         }
     })

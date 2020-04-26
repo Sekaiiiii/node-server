@@ -53,7 +53,12 @@ router.post("/", function (req, res) {
     ];
     pool.query(sql,[params],function(err,data,fileds){
         if(err){
-            res.send(return_obj.fail("200","发起数据库请求出错"));
+            if(err.errno == 1062){
+                res.send(return_obj.fail("106","用户名已存在"));
+            }else{
+                console.error(err);
+                res.send(return_obj.fail("200","发起数据库请求出错"));
+            }
         }else{
             res.send(return_obj.success({"msg":"注册用户成功"}));
         }
