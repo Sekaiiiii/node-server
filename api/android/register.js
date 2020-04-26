@@ -1,18 +1,17 @@
 /*
- * author:谢奇
- * create_day:2020-04-22
- * modified_day:2020-04-23
- * function:注册用户接口
- */
+* author:谢奇
+* create_day:2020-04-26
+* modified_day:2020-04-26
+* function:提供安卓端的注册接口
+*/
 'use strict'
 const express = require('express');
 const crypto = require("crypto");
-
-const return_obj = require("../../tool/return_obj.js");
-const pool = require("../../tool/pool.js")
-
+const pool = require('../../tool/pool.js');
+const verify_login = require('../../middleware/verify_login.js')
+const verify_no_login = require('../../middleware/verify_no_login.js');
+const return_obj = require('../../tool/return_obj.js');
 const router = express.Router();
-
 //参数检查
 router.post("/", function (req, res, next) {
     if (req.body.name != undefined &&
@@ -24,12 +23,10 @@ router.post("/", function (req, res, next) {
         var name_reg = new RegExp('^[\u4E00-\u9FA5A-Za-z0-9_]{2,18}$');
         var password_reg = new RegExp('^[a-zA-Z0-9_]{6,18}$');
         var mail_address_reg = new RegExp('^[a-zA-Z0-9_]+([-+.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([-.][a-zA-Z0-9_]+)*\.[a-zA-Z0-9_]+([-.][a-zA-Z0-9_]+)*$');
-
         if (name_reg.test(req.body.name) &&
             password_reg.test(req.body.password) &&
             mail_address_reg.test(req.body.mail_address)
         ) {
-            console.log("通过验证");
             next();
         } else {
             res.send(return_obj.fail('101', '传入参数格式不正确'));
@@ -56,14 +53,13 @@ router.post("/", function (req, res) {
     ];
     pool.query(sql,[params],function(err,data,fileds){
         if(err){
-            console.error(err);
             res.send(return_obj.fail("200","发起数据库请求出错"));
         }else{
-            console.log(data);
             res.send(return_obj.success({"msg":"注册用户成功"}));
         }
     })
 })
+
 
 
 module.exports = router;
