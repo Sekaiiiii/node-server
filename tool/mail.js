@@ -20,7 +20,6 @@ module.exports = {
             subject:"萌萌哒验证码",
             html:`验证码:${code}`
         }
-        console.log(mailOptions);
         transporter.sendMail(mailOptions,cb);
     }
 }
