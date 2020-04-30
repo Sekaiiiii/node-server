@@ -48,7 +48,7 @@ router.post("/", function (req, res, next) {
 //验证验证码
 router.post("/", function (req, res, next) {
     //拿session和req.body里的数据进行比较
-    if (req.session.register_msg.mail_address == req.body.register_msg &&
+    if (req.session.register_msg.mail_address == req.body.mail_address &&
         req.session.register_msg.name == req.body.name
     ) {
         if (req.session.register_msg.code == req.body.code) {
