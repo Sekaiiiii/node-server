@@ -13,6 +13,7 @@ const router = express.Router();
 
 //路由列表
 router.use("/login",require("./login.js"));
+router.use("/want_register",require("./want_register.js"));
 router.use("/register",require("./register.js"));
 router.use("/logout",require("./logout.js"));
 
