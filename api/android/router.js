@@ -17,4 +17,8 @@ router.use("/want_register",require("./want_register.js"));
 router.use("/register",require("./register.js"));
 router.use("/logout",require("./logout.js"));
 
+//测试接口
+router.use("/get_position",require("./get_position.js"));
+
+
 module.exports = router;
