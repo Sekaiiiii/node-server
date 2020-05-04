@@ -1,7 +1,7 @@
 /*
  * author:谢奇
  * create_day:2020-04-20
- * modified_day:2020-04-20
+ * modified_day:2020-05-05
  * function:配置服务器监听端口，全局中间件。
  */
 "use strict"
@@ -27,6 +27,7 @@ app.use(session(session_conf));
 
 //app加载静态资源
 app.use(express.static(path.join(__dirname, "dist")));
+app.use(express.static(path.join(__dirname, "uploads")));
 
 //app挂载bodyparser中间件
 app.use(body_parser.urlencoded());
@@ -34,4 +35,3 @@ app.use(body_parser.json());
 
 //为app挂载路由
 app.use("/", require("./router.js"));
-

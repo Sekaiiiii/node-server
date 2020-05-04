@@ -2,3 +2,5 @@
 /node_modules
 # 忽略public
 /public/
+# 忽略uploads
+/uploads/
