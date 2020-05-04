@@ -16,6 +16,8 @@ router.use("/login",require("./login.js"));
 router.use("/want_register",require("./want_register.js"));
 router.use("/register",require("./register.js"));
 router.use("/logout",require("./logout.js"));
+router.use("/set_user_info",require("./set_user_info.js"));
+router.use("/set_user_password",require("./set_user_password"));
 
 //测试接口
 router.use("/get_position",require("./get_position.js"));

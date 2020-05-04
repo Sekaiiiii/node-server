@@ -36,7 +36,8 @@ router.post("/", function (req, res, next) {
 //查询数据库
 router.post("/", function (req, res) {
     var sql = `
-    select  user.name,
+    select  user.id,
+            user.name,
             user.password,
             user.no_comment,
             user.no_upload_explain,
@@ -64,6 +65,7 @@ router.post("/", function (req, res) {
         if (password_md5 == user_list[0].password) {
             //设置session
             req.session.is_login = true;
+            req.session.uid = user_list[0].id;
             req.session.name = user_list[0].name;
             req.session.no_comment = user_list[0].no_comment;
             req.session.no_upload_session = user_list[0].no_session;
