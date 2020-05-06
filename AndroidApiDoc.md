@@ -218,6 +218,7 @@
                 establishment_time:data,
                 open_time:time,
                 close_time:time,
+                time:longtext,？
                 introduction:longtext,
                 visit_info:longtext,
                 attention:longtext,

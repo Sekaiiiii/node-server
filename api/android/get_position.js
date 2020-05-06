@@ -12,15 +12,15 @@ const verify_no_login = require('../../middleware/verify_no_login.js');
 const return_obj = require('../../tool/return_obj.js');
 
 const router = express.Router();
-router.get("/",function(req,res,next){
+router.get("/", function (req, res, next) {
     let sql = "select * from position";
-    pool.query(sql,(err,data,fileds)=>{
-        if(err){
+    pool.query(sql, (err, data, fileds) => {
+        if (err) {
             console.error(err);
-            return res.send(return_obj.fail("200","调用数据库接口发生异常错误"));
+            return res.send(return_obj.fail("200", "调用数据库接口发生异常错误"));
         }
         res.send(return_obj.success({
-            "position_list":data
+            "position_list": data
         }));
     })
 })
