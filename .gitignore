@@ -4,3 +4,5 @@
 /public/
 # 忽略uploads
 /uploads/
+# 忽略eslint
+.eslintrc.js

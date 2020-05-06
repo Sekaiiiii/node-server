@@ -90,7 +90,10 @@ router.get("/", function (req, res, next) {
             console.log(error);
             return next(error);
         }
-        res.send(return_obj.success(museum_list));
+        res.send(return_obj.success({
+            msg:"获取数据成功",
+            museum_list:museum_list
+        }));
     });
 })
 
