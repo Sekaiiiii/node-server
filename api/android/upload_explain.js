@@ -199,7 +199,7 @@ router.use("/", function (err, req, res, next) {
             res.send(return_obj.fail("101", "传入参数格式有误"));
             break;
         case "200":
-            res.send(return_obj, fail("200", "调用数据库接口出错"));
+            res.send(return_obj.fail("200", "调用数据库接口出错"));
             break;
         case "304":
             res.send(return_obj.fail("304", "插入数据库出现异常错误，请及时通知开发者"));
