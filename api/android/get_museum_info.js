@@ -91,8 +91,8 @@ router.get("/", function (req, res, next) {
             return next(error);
         }
         res.send(return_obj.success({
-            msg:"获取数据成功",
-            museum_list:museum_list
+            msg: "获取数据成功",
+            museum_list: museum_list
         }));
     });
 })
@@ -106,6 +106,9 @@ router.use("/", function (err, req, res, next) {
     switch (err.message) {
         case '200':
             res.send(return_obj.fail("200", "调用数据库接口出错"));
+            break;
+        default:
+            res.send(return_obj, fail("500", "出乎意料的错误"));
             break;
     }
 })

@@ -178,7 +178,6 @@ router.post("/", function (req, res, next) {
 
 //错误处理部分
 router.use("/", function (err, req, res, next) {
-
     //如果发生错误，公共操作就是删除写入的文件
     fs.unlink(path.join(__dirname, "..", "..", req.file.path), function (err) {
         if (err) {
@@ -205,7 +204,7 @@ router.use("/", function (err, req, res, next) {
             res.send(return_obj.fail("304", "插入数据库出现异常错误，请及时通知开发者"));
             break;
         default:
-            console.log("???");
+            res.send(return_obj, fail("500", "出乎意料的错误"));
             break;
     }
 
