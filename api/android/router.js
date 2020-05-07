@@ -24,8 +24,8 @@ router.use("/get_collection_info",require("./get_collection_info.js"));
 router.use("/get_exhibition_info",require("./get_exhibition_info.js"));
 router.use("/get_education_activity_info",require("./get_education_activity_info.js"));
 router.use("/get_new_info",require("./get_new_info.js"));
-
-
+router.use("/get_explain_info",require("./get_explain_info.js"));
+router.use("/get_myself_explain",require("./get_myself_explain"));
 router.use("/comment", require("./comment.js"));
 router.use("/get_museum_comment", require("./get_museum_comment"));
 

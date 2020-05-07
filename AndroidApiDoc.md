@@ -9,11 +9,13 @@
 | 2020-05-04 18:51 |  谢奇  | 稍微修改了4号接口的功能                  |
 | 2020-05-05 04:49 |  谢奇  | 完成6号 讲解上传接口                     |
 | 2020-05-06 23:30 |  谢奇  | 完成7号 博物馆信息获取接口               |
-| 2020-05-07 15:03 |  谢奇  | 完成14号 发布评论接口                    |
+| 2020-05-07 15:03 |  谢奇  | 完成15号 发布评论接口                    |
 | 2020-05-07 15:37 |  谢奇  | 完成12号 获取博物馆评论接口              |
 | 2020-05-07 23:24 |  谢奇  | 完成8号 获取博物馆藏品信息接口，初略测试 |
 | 2020-05-08 00:06 |  谢奇  | 完成11号 获取新闻的接口，初略测试        |
 | 2020-05-08 00:29 |  谢奇  | 完成9号 获取展览的接口，初略测试         |
+| 2020-05-08 01:45 |  谢奇  | 完成10号 获取教育活动的接口，初略测试    |
+| 2020-05-08 02:28 |  谢奇  | 完成13号 获取讲解信息接口                |
 
 ## 老田老胡注意事项
 1. 关于登录状态的问题，服务端会创建一个session,将sessionId以cookie的形式传过去,你们看看怎么处理cookie的问题。
@@ -94,6 +96,7 @@
     |  302   | 修改数据库出现异常错误，请及时通知开发者 |
     |  303   | 查询数据库出现异常错误，请及时通知开发者 |
     |  304   | 插入数据库出现异常错误，请及时通知开发者 |
+    |  400   | 没有检索到(展览、教育活动、藏品)         |
     |  500   | 出乎意料的错误                           |
 
 ## 接口列表
@@ -268,6 +271,7 @@
 - data:
     ```
     data:{
+        msg: "获取藏品信息成功",
         collection_list:[
             {
                 id:int
@@ -292,10 +296,14 @@
 - path:/api/android/get_exhibition_info
 - method:get
 - params:
-    - **id**:int(需要检索的某个博物馆的id)
+    - id:int(需要检索的某个博物馆的id)
+    - name:string(名字模糊查询时使用)
+    - page:int(表示第几页 从1开始)(默认第一页)
+    - ppn:int(每页显示多少条数据)(默认10条)
 - data:
     ```
     data:{
+        msg: "获取展览成功",
         exhibition_list:[
             {
                 id:int,
@@ -316,23 +324,29 @@
     }
     ```
 
-### 10. 获取博物馆教育活动信息(排序 名字排序 搜索 名字搜索)
+### 10. 获取博物馆教育活动信息(已完成)(排序 名字排序 搜索 名字搜索)
 - function: 已登录状态用户可以调用该接口获取某个博物馆的教育活动
 - path：/api/android/get_education_activity_info
 - params:
-    - **id**:int(需要检索的某个博物馆的id)
+    - id:int(需要检索的某个博物馆的id)
+    - name:string(名字模糊查询时使用)
+    - page:int(表示第几页 从1开始)(默认第一页)
+    - ppn:int(每页显示多少条数据)(默认10条)
 - data:
     ```
     data:{
+        msg: "获取教育活动信息成功",
         education_activity_list:[
             id:int,
             name:varchar(255),
             start_time:datetime,
             end_time:datetime,
+            time:longtext,
             tag:int(一个映射表的key(这个表由老曹组给出)),
             content:longtext,
             url:longtext,
             cooperator:longtext,
+            museum_id,
             image_list:[
                 'filename1.jpg',
                 'filename2.jpg',
@@ -395,29 +409,45 @@
     }
     ```
 
-### 13.用户查看自己的评论(改成讲解)
-- function:已登录用户查看自己发过的评论
-- path:/api/android/get_myself_comment
+### 13.获取讲解信息(已完成)
+- function:已登录用户阔以通过调用该接口查看所有讲解或者某个博物馆的讲解
+- path:/api/android/get_explain_info
+- method:get
+- param:
+    - 以下3个id,要是全部不存在表示查询所有的讲解,若存在其中1个表示查询对应的讲解,不能同时传多个id
+      - museum_id:int(博物馆id)
+      - exhibition_id:int(展览id)
+      - collection_id:int(藏品id)
+    - page:int(>= 1)
+    - ppn:int(>= 0)
+- data:
+  ```
+  data:{
+      msg:"获取讲解信息成功",
+      explain_list:[
+          {
+
+          },
+          ...
+      ]
+  }
+  ```
+
+### 14.用户查看自己的发布的讲解
+- function:已登录用户查看自己发过的讲解
+- path:/api/android/get_myself_explain
 - params:
 - data:
     ```
     data:{
-        comment_list:[
-            {
-                id:int,
-                time:datetime,
-                content:longtext,
-                exhibition_score:double,
-                environment_score:double,
-                service_score:double,
-                is_illegal:tinyint
-            },
-            ...
+        msg:"获取自己发布的讲解成功",
+        explain_list:[
+            
         ]
     }
     ```
 
-### 14.用户发表评论(已完成)
+### 15.用户发表评论(已完成)
 - function: 已登录用户阔以对某个博物馆进行评价
 - method:post
 - path:/api/android/comment

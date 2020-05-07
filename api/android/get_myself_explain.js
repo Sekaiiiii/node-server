@@ -1,8 +1,8 @@
 /*
 * author:谢奇
-* create_day:2020-05-08
-* modified_day:2020-05-08
-* function:已登录用户阔以调用该接口查看所有展览或者某个博物馆的展览
+* create_day:2020-05-07
+* modified_day:2020-05-07
+* function:已登录用户阔以调用该接口查看所有藏品或者某个博物馆的藏品
 */
 'use strict'
 const express = require('express');
@@ -49,37 +49,35 @@ router.get("/", function (req, res, next) {
         function structureSQL(done) {
             let sql = `
             select 
-                education_activity.id as id,
-                education_activity.name as name,           
-                education_activity.start_time as start_time,
-                education_activity.end_time as end_time,
-                education_activity.time as time,
-                education_activity.tag as tag,
-                education_activity.content as content,
-                education_activity.url as url,
-                education_activity.cooperator as cooperator,
-                museum.id as museum_id
+                new.id as id,
+                new.title as title,
+                new.author as author,
+                new.time as time,
+                new.description as description,
+                new.content as content,
+                new.url as url,
+                new.tag as tag,
+                museum_has_new.museum_id
             from 
-                education_activity,
-                museum
+                new left join museum_has_new on museum_has_new.new_id = new.id 
             where 
-                education_activity.museum_id = museum.id
-                ${req.query.id ? `and museum.id = ? ` : ``}
-                ${req.query.name ? `and education_activity.name like ? ` : ``}
+                new.id >= 1
+                ${req.query.id ? `and museum_has_new.museum_id = ? ` : ``}
+                ${req.query.name ? `and new.title like ? ` : ``}
             order by
-                education_activity.name asc
+                new.time asc
             limit ?
             offset ?
             `;
 
+            //参数构造
             let param_list = [];
 
-            //参数构造
             if (req.query.id) {
                 param_list.push(req.query.id);
             }
             if (req.query.name) {
-                param_list.push("%" + req.query.name + "%");
+                param_list.push( "%" +req.query.name + "%");
             }
 
             let offset = 0; //偏移
@@ -98,49 +96,23 @@ router.get("/", function (req, res, next) {
             done(null, sql, param_list);
 
         },
-        function getEducationActivityList(sql, param_list, done) {
-            pool.query(sql, param_list, function (err, education_activity_list, fileds) {
+        function getNewList(sql, param_list, done) {
+            pool.query(sql, param_list, function (err, new_list, fileds) {
                 if (err) {
                     console.error(err);
                     return done(new Error("200"));
                 };
-                done(null, education_activity_list);
+                done(null, new_list);
             });
-        },
-        function getImageList(education_activity_list, done) {
-            if (education_activity_list.length == 0) {
-                return done(new Error("400"));
-            }
-            let education_activity_id_list = new Array();
-            education_activity_list.forEach(education_activity => {
-                education_activity_id_list.push(education_activity.id);
-            });
-            let sql = 'select * from image where image.education_activity_id in (?)';
-            pool.query(sql, [education_activity_id_list], function (err, image_list, fileds) {
-                if (err) {
-                    console.error(err);
-                    return done(new Error("200"));
-                };
-                //构造结果
-                for (let i = 0; i < education_activity_list.length; i++) {
-                    education_activity_list[i].image_list = new Array();
-                    for (let j = 0; j < image_list.length; j++) {
-                        if (image_list[j].education_activity_id == education_activity_list[i].id) {
-                            education_activity_list[i].image_list.push(image_list[j].file);
-                        }
-                    }
-                }
-                done(null, education_activity_list);
-            })
         }
     ],
-        function (err, education_activity_list) {
+        function (err, new_list) {
             if (err) {
                 return next(err);
             }
             res.send(return_obj.success({
-                msg: "获取教育活动信息成功",
-                data: education_activity_list
+                msg: "获取新闻信息成功",
+                data: new_list
             }))
         }
     );//async.waterfall...
@@ -149,7 +121,7 @@ router.get("/", function (req, res, next) {
 
 //错误处理
 router.use("/", function (err, req, res, next) {
-    console.log(err);
+    console.error(err);
     switch (err.message) {
         case "100":
             res.send(return_obj.fail("100", "缺少必要的参数"));
@@ -161,7 +133,7 @@ router.use("/", function (err, req, res, next) {
             res.send(return_obj.fail("200", "调用数据库接口出错"));
             break;
         case "400":
-            res.send(return_obj.fail("400", "没有检索到教育活动"));
+            res.send(return_obj.fail("400", "没有检索到藏品"));
             break;
         default:
             res.send(return_obj.fail("500", "出乎意料的错误"));
