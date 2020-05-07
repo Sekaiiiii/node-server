@@ -61,7 +61,7 @@ router.get("/", function (req, res, next) {
             where 
                 collection.museum_id = museum.id
                 ${req.query.id ? `and museum.id = ? ` : ``}
-                ${req.query.name ? `and collection.name like ? ' ` : ``}
+                ${req.query.name ? `and collection.name like ? ` : ``}
             order by
                 collection.name asc
             limit ?
@@ -109,7 +109,7 @@ router.get("/", function (req, res, next) {
             }
             let collection_id_list = new Array();
             collection_list.forEach(collection => {
-                collection_id_list.push(collection_list.id);
+                collection_id_list.push(collection.id);
             });
             let sql = 'select * from image where image.collection_id in (?)';
             pool.query(sql, [collection_id_list], function (err, image_list, fileds) {

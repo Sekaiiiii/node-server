@@ -1,8 +1,8 @@
 /*
 * author:谢奇
-* create_day:2020-05-07
-* modified_day:2020-05-07
-* function:已登录用户阔以调用该接口查看所有藏品或者某个博物馆的藏品
+* create_day:2020-05-08
+* modified_day:2020-05-08
+* function:已登录用户阔以调用该接口查看所有展览或者某个博物馆的展览
 */
 'use strict'
 const express = require('express');
@@ -49,21 +49,23 @@ router.get("/", function (req, res, next) {
         function structureSQL(done) {
             let sql = `
             select 
-                collection.id as id,
-                collection.name as name,
-                collection.content as content,
-                collection.material as material,
-                collection.tag as tag,
+                exhibition.id as id,
+                exhibition.name as name,
+                exhibition.content as content,
+                exhibition.start_time as start_time,
+                exhibition.end_time as end_time,
+                exhibition.time as time,
+                exhibition.tag as tag,
                 museum.id as museum_id
             from 
-                collection,
+                exhibition,
                 museum
             where 
-                collection.museum_id = museum.id
+                exhibition.museum_id = museum.id
                 ${req.query.id ? `and museum.id = ? ` : ``}
-                ${req.query.name ? `and collection.name like \'%?%\' ` : ``}
+                ${req.query.name ? `and exhibition.name like ? ` : ``}
             order by
-                collection.name asc
+                exhibition.name asc
             limit ?
             offset ?
             `;
@@ -75,14 +77,14 @@ router.get("/", function (req, res, next) {
                 param_list.push(req.query.id);
             }
             if (req.query.name) {
-                param_list.push(req.query.name);
+                param_list.push("%" + req.query.name + "%");
             }
 
             let offset = 0; //偏移
             let limit = 10; //每页显示多少
 
             if (req.query.ppn != undefined) {
-                limit = req.query.ppn;
+                limit = req.query.ppn * 1;
             }
             if (req.query.page != undefined) {
                 offset = (req.query.page - 1) * limit;
@@ -94,49 +96,49 @@ router.get("/", function (req, res, next) {
             done(null, sql, param_list);
 
         },
-        function getCollectionList(sql, param_list, done) {
-            pool.query(sql, param_list, function (err, collection_list, fileds) {
+        function getExhibitionList(sql, param_list, done) {
+            pool.query(sql, param_list, function (err, exhibition_list, fileds) {
                 if (err) {
                     console.error(err);
                     return done(new Error("200"));
                 };
-                done(null, collection_list);
+                done(null, exhibition_list);
             });
         },
-        function getImageList(collection_list, done) {
-            if (collection_list.length == 0) {
+        function getImageList(exhibition_list, done) {
+            if (exhibition_list.length == 0) {
                 return done(new Error("400"));
             }
-            let collection_id_list = new Array();
-            collection_list.forEach(collection => {
-                collection_id_list.push(collection_list.id);
+            let exhibition_id_list = new Array();
+            exhibition_list.forEach(exhibition => {
+                exhibition_id_list.push(exhibition.id);
             });
-            let sql = 'select * from image where image.collection_id in (?)';
-            pool.query(sql, [collection_id_list], function (err, image_list, fileds) {
+            let sql = 'select * from image where image.exhibition_id in (?)';
+            pool.query(sql, [exhibition_id_list], function (err, image_list, fileds) {
                 if (err) {
                     console.error(err);
                     return done(new Error("200"));
                 };
                 //构造结果
-                for (let i = 0; i < collection_list.length; i++) {
-                    collection_list[i].image_list = new Array();
+                for (let i = 0; i < exhibition_list.length; i++) {
+                    exhibition_list[i].image_list = new Array();
                     for (let j = 0; j < image_list.length; j++) {
-                        if (image_list[j].collection_id == collection_list[i].id) {
-                            collection_list[i].image_list.push(image_list[j].file);
+                        if (image_list[j].exhibition_id == exhibition_list[i].id) {
+                            exhibition_list[i].image_list.push(image_list[j].file);
                         }
                     }
                 }
-                done(null, collection_list);
+                done(null, exhibition_list);
             })
         }
     ],
-        function (err, collection_list) {
+        function (err, exhibition_list) {
             if (err) {
                 return next(err);
             }
             res.send(return_obj.success({
-                msg: "获取藏品信息成功",
-                data: collection_list
+                msg: "获取展览信息成功",
+                data: exhibition_list
             }))
         }
     );//async.waterfall...
@@ -157,7 +159,7 @@ router.use("/", function (err, req, res, next) {
             res.send(return_obj.fail("200", "调用数据库接口出错"));
             break;
         case "400":
-            res.send(return_obj.fail("400", "没有检索到藏品"));
+            res.send(return_obj.fail("400", "没有检索到展览"));
             break;
         default:
             res.send(return_obj.fail("500", "出乎意料的错误"));
