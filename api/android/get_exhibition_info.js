@@ -138,7 +138,7 @@ router.get("/", function (req, res, next) {
             }
             res.send(return_obj.success({
                 msg: "获取展览信息成功",
-                data: exhibition_list
+                exhibition_list: exhibition_list
             }))
         }
     );//async.waterfall...

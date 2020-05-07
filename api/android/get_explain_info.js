@@ -76,13 +76,14 @@ router.get("/", function (req, res, next) {
         function structureSQL(done) {
             let sql = `
             select 
-               *
+                \`explain\`.*,
+                user.name,
+                user.mail_address
             from 
-               \`explain\`
-            ${req.query.collection_id == undefined &&
-                    req.query.exhibition_id == undefined &&
-                    req.query.museum_id == undefined ? "" : "where \`explain\`.id >= 1"}
-
+                \`explain\`,
+                user
+            where
+                user.id = \`explain\`.user_id
                 ${req.query.museum_id ? `and \`explain\`.museum_id = ? ` : ``}
                 ${req.query.exhibition_id ? `and \`explain\`.exhibition_id = ? ` : ``}
                 ${req.query.collection_id ? `and \`explain\`.collection_id = ? ` : ``}
@@ -137,7 +138,7 @@ router.get("/", function (req, res, next) {
             }
             res.send(return_obj.success({
                 msg: "获取讲解成功",
-                data: explain_list
+                explain_list: explain_list
             }))
         }
     );//async.waterfall...

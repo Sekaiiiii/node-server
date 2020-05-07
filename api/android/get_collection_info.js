@@ -136,7 +136,7 @@ router.get("/", function (req, res, next) {
             }
             res.send(return_obj.success({
                 msg: "获取藏品信息成功",
-                data: collection_list
+                collection_list: collection_list
             }))
         }
     );//async.waterfall...

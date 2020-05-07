@@ -16,7 +16,8 @@
 | 2020-05-08 00:29 |  谢奇  | 完成9号 获取展览的接口，初略测试         |
 | 2020-05-08 01:45 |  谢奇  | 完成10号 获取教育活动的接口，初略测试    |
 | 2020-05-08 02:28 |  谢奇  | 完成13号 获取讲解信息接口                |
-
+| 2020-05-08 02:50 |  谢奇  | 完成14号 获取自己发布的讲解信息          |
+| 2020-05-08 03:14 |  谢奇  | 完成18号 反馈信息的接口                  |
 ## 老田老胡注意事项
 1. 关于登录状态的问题，服务端会创建一个session,将sessionId以cookie的形式传过去,你们看看怎么处理cookie的问题。
 2. 关于图片和讲解资源问题，我准备将所有图片和资源请求编写成统一的接口。所有涉及到返回图片的接口返回的图片均采用文件名的形式，你们显示图片的时候，再用图片名调用接口。
@@ -423,27 +424,60 @@
 - data:
   ```
   data:{
-      msg:"获取讲解信息成功",
-      explain_list:[
-          {
-
-          },
-          ...
-      ]
+    //以下是测试的例子
+    data:{
+        "msg": "获取讲解成功",
+        "explain_list": [
+            {
+                "id": 2,
+                "title": "ABC12",
+                "artist": null,
+                "album": null,
+                "genre": null,
+                "duration": null,
+                "duration_unit": null,
+                "file": "Quadro Nuevo - Kommissar Maigret.mp3-1588624513614.mp3",
+                "album_art_res_id": null,
+                "album_art_res_name": null,
+                "is_illegal": 1,
+                "user_id": 31,
+                "collection_id": null,
+                "exhibition_id": null,
+                "museum_id": 123,
+                "name": "XQ1",
+                "mail_address": "738359456@qq.com"
+            },
+            ...
+    }
   }
   ```
 
-### 14.用户查看自己的发布的讲解
+### 14.用户查看自己的发布的讲解(已完成)(因为发的应该不会太多所以所以就不写参数了)
 - function:已登录用户查看自己发过的讲解
 - path:/api/android/get_myself_explain
 - params:
 - data:
     ```
     data:{
-        msg:"获取自己发布的讲解成功",
-        explain_list:[
-            
-        ]
+        "msg": "获取讲解信息成功",
+        "explain_list": [
+            {
+                "id": 2,
+                "title": "ABC12",
+                "artist": null,
+                "album": null,
+                "genre": null,
+                "duration": null,
+                "duration_unit": null,
+                "file": "Quadro Nuevo - Kommissar Maigret.mp3-1588624513614.mp3",
+                "album_art_res_id": null,
+                "album_art_res_name": null,
+                "is_illegal": 1,
+                "user_id": 31,
+                "collection_id": null,
+                "exhibition_id": null,
+                "museum_id": 123
+            },
     }
     ```
 
@@ -464,7 +498,7 @@
     }
     ```
 
-### 15. 用户删除评论(设计中)
+### 16. 用户删除评论(设计中)
 - function:已登录用户阔以对自己已经发布的评论进行删除
 - method:post
 - path:/api/android/del_comment
@@ -473,3 +507,23 @@
 
 
 
+
+### 17. 用户删除讲解(设计中)
+- function:已登录用户阔以对自己已经发布的讲解进行删除
+- method:post
+- path:/api/android/del_explain
+- params:
+
+### 18. 客户反馈(已经完成)
+- function:用户阔以调用改接口，将反馈信息以邮箱方式发送给管理员，由管理员进行解决回复
+- method:post
+- path:/api/android/feedback
+- param:
+    - title:string
+    - content:string
+- data
+    ```
+    data:{
+        msg:"反馈信息发送成功"
+    }
+    ```

@@ -140,7 +140,7 @@ router.get("/", function (req, res, next) {
             }
             res.send(return_obj.success({
                 msg: "获取教育活动信息成功",
-                data: education_activity_list
+                education_activity_list: education_activity_list
             }))
         }
     );//async.waterfall...

@@ -18,101 +18,39 @@ router.get("/", verify_login);
 
 //参数检查
 router.get("/", function (req, res, next) {
-    let id_reg = new RegExp("^\\d+$");
-    let page_reg = new RegExp("^\\d+$");
-    let ppn_reg = new RegExp("^\\d+$");
-    if (req.query.id != undefined) {
-        if (!id_reg.test(req.query.id)) {
-            return next(new Error("101"));
-        }
-    }
-    if (req.query.page != undefined) {
-        if (!page_reg.test(req.query.page)) {
-            if (req.query.page < 1) {
-                return next(new Error("101"));
-            }
-        }
-    }
-    if (req.query.ppn != undefined) {
-        if (!ppn_reg.test(req.query.ppn)) {
-            if (req.query.ppn < 0) {
-                return next(new Error("101"));
-            }
-        }
-    }
     next();
 })
 
 //查询查询
 router.get("/", function (req, res, next) {
     async.waterfall([
-        function structureSQL(done) {
+        function getExplainList(done) {
             let sql = `
             select 
-                new.id as id,
-                new.title as title,
-                new.author as author,
-                new.time as time,
-                new.description as description,
-                new.content as content,
-                new.url as url,
-                new.tag as tag,
-                museum_has_new.museum_id
+                *
             from 
-                new left join museum_has_new on museum_has_new.new_id = new.id 
-            where 
-                new.id >= 1
-                ${req.query.id ? `and museum_has_new.museum_id = ? ` : ``}
-                ${req.query.name ? `and new.title like ? ` : ``}
+                \`explain\`
+            where
+                \`explain\`.user_id = ?
             order by
-                new.time asc
-            limit ?
-            offset ?
+                \`explain\`.id asc
             `;
-
-            //参数构造
-            let param_list = [];
-
-            if (req.query.id) {
-                param_list.push(req.query.id);
-            }
-            if (req.query.name) {
-                param_list.push( "%" +req.query.name + "%");
-            }
-
-            let offset = 0; //偏移
-            let limit = 10; //每页显示多少
-
-            if (req.query.ppn != undefined) {
-                limit = req.query.ppn * 1;
-            }
-            if (req.query.page != undefined) {
-                offset = (req.query.page - 1) * limit;
-            }
-
-            param_list.push(limit);
-            param_list.push(offset);
-
-            done(null, sql, param_list);
-
-        },
-        function getNewList(sql, param_list, done) {
-            pool.query(sql, param_list, function (err, new_list, fileds) {
+            pool.query(sql, [req.session.uid], function (err, explain_list, fileds) {
                 if (err) {
                     console.error(err);
                     return done(new Error("200"));
                 };
-                done(null, new_list);
+                done(null, explain_list);
             });
         }
     ],
-        function (err, new_list) {
+        function (err, explain_list) {
             if (err) {
                 return next(err);
             }
             res.send(return_obj.success({
-                msg: "获取新闻信息成功",
-                data: new_list
+                msg: "获取讲解信息成功",
+                explain_list: explain_list
             }))
         }
     );//async.waterfall...
