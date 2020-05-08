@@ -14,6 +14,8 @@ router.use("/login",require("./login.js"));
 router.use("/register",require("./register.js"));
 router.use("/logout",require("./logout.js"));
 
-
+//新闻相关
 router.use("/get_new",require("./get_new.js"));
+
+
 module.exports = router;
