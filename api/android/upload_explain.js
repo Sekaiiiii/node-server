@@ -32,7 +32,7 @@ router.post("/", function (req, res, next) {
             if (err.code == "LIMIT_FILE_COUNT") {
                 return res.send(return_obj.fail("116", "上传文件超出数量限制"));
             }
-            return res.send(return_obj.fail)
+            return res.send(return_obj.fail("500","出乎意料的错误"));
         }
         next();
     })
