@@ -90,7 +90,6 @@ router.post("/", function (req, res, next) {
         },
         function accessFile(connect, file, done) {
             let filepath = path.join(__dirname, "..", "..", "uploads", file);
-            console.log(filepath);
             fs.access(filepath, function (err) {
                 if (err) {
                     console.error(err);
