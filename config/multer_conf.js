@@ -17,7 +17,7 @@ module.exports = {
                 cb(null, 'uploads/');
             },
             filename: function (req, file, cb) {
-                cb(null, file.originalname + '-' + Date.now() + '.mp3');
+                cb(null, 'explain' + '-' + Date.now() + '.mp3');
             }
         }),
         fileFilter: function (req, file, cb) {
