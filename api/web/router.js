@@ -16,6 +16,6 @@ router.use("/logout",require("./logout.js"));
 
 //新闻相关
 router.use("/get_new",require("./get_new.js"));
-
+router.use("/get_new_num",require("./get_new_num.js"));
 
 module.exports = router;

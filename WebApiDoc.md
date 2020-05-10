@@ -190,3 +190,13 @@ data:{
     - new_id
     - museum_id
     - tag
+
+#### 6.2 获取新闻信息的数量
+- function:获取新闻信息的数量
+- method:get
+- param
+    - title
+    - museum_id
+    - tag
+
+
