@@ -200,3 +200,13 @@ data:{
     - tag
 
 
+
+### 7.博物馆相关接口
+
+### 8.评论相关接口
+#### 8.1 获取评论接口
+- path:/api/web/get_comment
+- method:get
+- params:
+    - museum_id:博物馆id
+    - user_name:用户名
