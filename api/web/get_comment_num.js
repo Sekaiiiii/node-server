@@ -19,28 +19,9 @@ router.get("/", verify_login);
 //参数检查
 router.get("/", function (req, res, next) {
     let id_reg = new RegExp("^\\d+$");
-    let num_reg = new RegExp("^\\d+$");
 
     if (req.query.museum_id) {
         if (!id_reg.test(req.query.museum_id)) {
-            return next(new Error("101"));
-        }
-    }
-
-    if (req.query.ppn) {
-        if (!num_reg.test(req.query.ppn)) {
-            return next(new Error("101"));
-        }
-        if (req.query.ppn < 1) {
-            return next(new Error("101"));
-        }
-    }
-
-    if (req.query.page) {
-        if (!num_reg.test(req.query.page)) {
-            return next(new Error("101"));
-        }
-        if (req.query.page < 1) {
             return next(new Error("101"));
         }
     }
@@ -66,10 +47,6 @@ router.get("/", function (req, res, next) {
                 ${req.query.user_name ? "and user.name like ?" : ""}
             order by
                 comment.time desc
-            limit
-                ?
-            offset
-                ?
             `;
 
             let param_list = [];
@@ -81,17 +58,6 @@ router.get("/", function (req, res, next) {
                 param_list.push("%" + req.query.user_name + "%");
             }
 
-            let offset = 0;
-            let limit = 15;
-
-            if (req.query.ppn) {
-                limit = req.query.ppn * 1;
-            }
-            if (req.query.page) {
-                offset = (page - 1) * limit;
-            }
-            param_list.push(limit);
-            param_list.push(offset);
 
             pool.query(sql, param_list, function (err, comment_num, fileds) {
                 if (err) {
@@ -130,7 +96,7 @@ router.use("/", function (err, req, res, next) {
             res.send(return_obj.fail("400", "没有检索到博物馆"));
             break;
         default:
-            res.send(return_obj, fail("500", "出乎意料的错误"));
+            res.send(return_obj.fail("500", "出乎意料的错误"));
             break;
     }
 })

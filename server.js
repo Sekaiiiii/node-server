@@ -33,14 +33,14 @@ app.use(express.static(path.join(__dirname, "uploads")));
 app.use(body_parser.urlencoded());
 app.use(body_parser.json());
 
-app.use("*", function (req, res, next) {
-    console.log(req.baseUrl);
-    console.log("query----------");
-    console.log(req.query);
-    console.log("body-----------");
-    console.log(req.body);
-    next();
-});
+// app.use("*", function (req, res, next) {
+//     console.log(req.baseUrl);
+//     console.log("query----------");
+//     console.log(req.query);
+//     console.log("body-----------");
+//     console.log(req.body);
+//     next();
+// });
 
 //为app挂载路由
 app.use("/", require("./router.js"));

@@ -96,27 +96,27 @@ router.get("/", function (req, res, next) {
                 limit = req.query.ppn * 1;
             }
             if (req.query.page) {
-                offset = (page - 1) * limit;
+                offset = (req.query.page - 1) * limit;
             }
             param_list.push(limit);
             param_list.push(offset);
 
-            pool.query(sql, param_list, function (err, comment_List, fileds) {
+            pool.query(sql, param_list, function (err, comment_list, fileds) {
                 if (err) {
                     console.error(err);
                     return done(new Error("200"), null);
                 }
-                done(null, comment_List);
+                done(null, comment_list);
             });
         }
-    ], function (error, comment_List) {
+    ], function (error, comment_list) {
         if (error) {
             console.log(error);
             return next(error);
         }
         res.send(return_obj.success({
             msg: "获取评论数据成功",
-            comment_List: comment_List
+            comment_list: comment_list
         }));
     });
 })
@@ -138,7 +138,7 @@ router.use("/", function (err, req, res, next) {
             res.send(return_obj.fail("400", "没有检索到博物馆"));
             break;
         default:
-            res.send(return_obj, fail("500", "出乎意料的错误"));
+            res.send(return_obj.fail("500", "出乎意料的错误"));
             break;
     }
 })

@@ -204,7 +204,7 @@ router.use("/", function (err, req, res, next) {
             res.send(return_obj.fail("304", "插入数据库出现异常错误，请及时通知开发者"));
             break;
         default:
-            res.send(return_obj, fail("500", "出乎意料的错误"));
+            res.send(return_obj.fail("500", "出乎意料的错误"));
             break;
     }
 })
