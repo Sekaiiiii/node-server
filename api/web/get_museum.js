@@ -5,6 +5,7 @@
  * function:已登录用户获取博物馆信息列表
  */
 'use strict'
+
 const express = require('express');
 const async = require("async");
 const pool = require('../../tool/pool.js');

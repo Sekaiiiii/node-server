@@ -18,6 +18,11 @@ router.use("/logout", require("./logout.js"));
 router.use("/get_museum", require("./get_museum.js"));
 
 
+//藏品相关
+router.use("/get_collection", require("./get_collection.js"));
+router.use("/get_collection_num", require("./get_collection_num.js"));
+
+
 //新闻相关
 router.use("/get_new", require("./get_new.js"));
 router.use("/get_new_num", require("./get_new_num.js"));
@@ -25,5 +30,14 @@ router.use("/get_new_num", require("./get_new_num.js"));
 //评论相关
 router.use("/get_comment", require("./get_comment.js"));
 router.use("/get_comment_num", require("./get_comment_num.js"));
+
+
+//讲解相关
+router.use("/get_explain", require("./get_explain.js"));
+router.use("/get_explain_num", require("./get_explain_num.js"));
+
+//用户相关
+router.use("/get_user", require("./get_user.js"));
+router.use("/get_user_num", require("./get_user_num.js"));
 
 module.exports = router;
