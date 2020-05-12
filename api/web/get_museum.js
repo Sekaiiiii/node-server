@@ -19,6 +19,13 @@ router.get("/", verify_login);
 
 //参数检查
 router.get("/", function (req, res, next) {
+    let id_reg = new RegExp("^\\d+$");
+
+    if (req.query.museum_id) {
+        if (!id_reg.test(req.query.museum_id)) {
+            return next(new Error("101"));
+        }
+    }
     next();
 })
 
@@ -48,11 +55,16 @@ router.get("/", function (req, res, next) {
             where
                 museum.position_id = position.id
                 ${req.query.name ? "and museum.name like ?" : ""}
+                ${req.query.museum_id ? "and museum.id = ?" : ""}
             `;
             let param_list = [];
             if (req.query.name) {
                 param_list.push("%" + req.query.name + "%");
             }
+            if (req.query.museum_id) {
+                param_list.push(req.query.museum_id);
+            }
+
             pool.query(sql, param_list, function (err, museum_list, fileds) {
                 if (err) {
                     console.error(err);

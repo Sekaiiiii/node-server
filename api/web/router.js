@@ -15,8 +15,7 @@ router.use("/register", require("./register.js"));
 router.use("/logout", require("./logout.js"));
 
 //博物馆相关
-router.use("/get_museum", require("./get_museum.js"));
-
+router.use("/get_museum", require("./get_museum.js"));//(修改第一次)
 
 //藏品相关
 router.use("/get_collection", require("./get_collection.js"));

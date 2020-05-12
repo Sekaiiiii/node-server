@@ -60,9 +60,10 @@ router.get("/", function (req, res, next) {
                 comment.exhibition_score as exhibition_score,
                 comment.environment_score as environment_score,
                 comment.service_score as service_score,
-                user.id as user,
+                user.id as user_id,
                 user.name as name,
-                user.mail_address as mail_address
+                user.mail_address as mail_address,
+                museum.id as museum_id
             from 
                 user,
                 comment,
@@ -72,6 +73,7 @@ router.get("/", function (req, res, next) {
                 comment.museum_id = museum.id 
                 ${req.query.museum_id ? "and comment.museum_id = ?" : ""}
                 ${req.query.user_name ? "and user.name like ?" : ""}
+                ${req.query.user_id ? "and user.id = ?" : ""}
             order by
                 comment.time desc
             limit
@@ -87,6 +89,9 @@ router.get("/", function (req, res, next) {
             }
             if (req.query.user_name) {
                 param_list.push("%" + req.query.user_name + "%");
+            }
+            if (req.query.user_id) {
+                param_list.push(req.query.user_id);
             }
 
             let offset = 0;

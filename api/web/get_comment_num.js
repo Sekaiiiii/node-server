@@ -45,6 +45,7 @@ router.get("/", function (req, res, next) {
                 comment.museum_id = museum.id 
                 ${req.query.museum_id ? "and comment.museum_id = ?" : ""}
                 ${req.query.user_name ? "and user.name like ?" : ""}
+                ${req.query.user_id ? "and user.id = ?" : ""}
             order by
                 comment.time desc
             `;
@@ -57,7 +58,9 @@ router.get("/", function (req, res, next) {
             if (req.query.user_name) {
                 param_list.push("%" + req.query.user_name + "%");
             }
-
+            if (req.query.user_id) {
+                param_list.push(req.query.user_id);
+            }
 
             pool.query(sql, param_list, function (err, comment_num, fileds) {
                 if (err) {
