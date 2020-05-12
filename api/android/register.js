@@ -45,6 +45,9 @@ router.post("/", function (req, res, next) {
 
 //验证验证码
 router.post("/", function (req, res, next) {
+    if(!req.session.register_msg){
+        return res.send(return_obj.fail('500','调用register和want_register的cookie得一致'));
+    }
     //拿session和req.body里的数据进行比较
     if (req.session.register_msg.mail_address == req.body.mail_address &&
         req.session.register_msg.name == req.body.name
@@ -59,7 +62,7 @@ router.post("/", function (req, res, next) {
             return res.send(return_obj.fail("108", "验证码不正确"));
         }
     } else {
-        return res.send(return_obj.fail("109","获取验证码前后用户信息不一致"));
+        return res.send(return_obj.fail("109", "获取验证码前后用户信息不一致"));
     }
 })
 
