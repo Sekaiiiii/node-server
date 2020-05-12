@@ -74,7 +74,7 @@ router.get('/', function (req, res, next) {
         }
         res.send(return_obj.success({
             msg: "获取藏品数量成功",
-            collection_num: education_activity_num[0].education_activity_num
+            education_activity_num: education_activity_num[0].education_activity_num
         }))
     })
 })
