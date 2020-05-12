@@ -22,6 +22,13 @@ router.use("/get_museum", require("./get_museum.js"));
 router.use("/get_collection", require("./get_collection.js"));
 router.use("/get_collection_num", require("./get_collection_num.js"));
 
+//展览相关
+router.use("/get_exhibition", require("./get_exhibition.js"));
+router.use("/get_exhibition_num", require("./get_exhibition_num.js"));
+
+//教育活动相关
+router.use("/get_education_activity", require("./get_education_activity.js"));
+router.use("/get_education_activity_num", require("./get_education_activity_num.js"));
 
 //新闻相关
 router.use("/get_new", require("./get_new.js"));

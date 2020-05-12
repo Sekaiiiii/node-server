@@ -25,8 +25,8 @@ router.get('/', function (req, res, next) {
             return next(new Error("101"));
         }
     }
-    if (req.query.collection_id) {
-        if (!id_reg.test(req.query.collection_id)) {
+    if (req.query.exhibition_id) {
+        if (!id_reg.test(req.query.exhibition_id)) {
             return next(new Error("101"));
         }
     }
@@ -40,42 +40,42 @@ router.get('/', function (req, res, next) {
         function structureSQL(done) {
             let sql = `
             select
-                count(*) as collection_num
+                count(*) as exhibition_num
             from
                 museum,
-                collection
+                exhibition
             where
-                museum.id = collection.museum_id
-                ${req.query.name ? "and collection.name like ?" : ""}
-                ${req.query.collection_id ? "and collection.id = ?" : ""}
-                ${req.query.museum_id ? "and collection.museum_id = ?" : ""}
+                museum.id = exhibition.museum_id
+                ${req.query.name ? "and exhibition.name like ?" : ""}
+                ${req.query.exhibition_id ? "and exhibition.id = ?" : ""}
+                ${req.query.museum_id ? "and exhibition.museum_id = ?" : ""}
             order by
-                collection.id asc
+                exhibition.id asc
             `;
             let param_list = [];
 
             if (req.query.name) param_list.push("%" + req.query.name + "%");
-            if (req.query.collection_id) param_list.push(req.query.collection_id);
+            if (req.query.exhibition_id) param_list.push(req.query.exhibition_id);
             if (req.query.museum_id) param_list.push(req.query.museum_id);
 
             done(null, sql, param_list);
         },
-        function getCollectionList(sql, param_list, done) {
-            pool.query(sql, param_list, function (err, collection_num, fileds) {
+        function getExhibitionNum(sql, param_list, done) {
+            pool.query(sql, param_list, function (err, exhibition_num, fileds) {
                 if (err) {
                     console.error(err);
                     return done(new Error("200"));
                 }
-                done(null, collection_num);
+                done(null, exhibition_num);
             });
         },
-    ], function (err, collection_num) {
+    ], function (err, exhibition_num) {
         if (err) {
             return next(err);
         }
         res.send(return_obj.success({
             msg: "获取藏品数量成功",
-            collection_num: collection_num[0].collection_num
+            exhibition_num: exhibition_num[0].exhibition_num
         }))
     })
 })

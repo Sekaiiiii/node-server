@@ -25,8 +25,8 @@ router.get('/', function (req, res, next) {
             return next(new Error("101"));
         }
     }
-    if (req.query.collection_id) {
-        if (!id_reg.test(req.query.collection_id)) {
+    if (req.query.education_activity_num) {
+        if (!id_reg.test(req.query.education_activity_num)) {
             return next(new Error("101"));
         }
     }
@@ -40,48 +40,48 @@ router.get('/', function (req, res, next) {
         function structureSQL(done) {
             let sql = `
             select
-                count(*) as collection_num
-            from
+                count(*) as education_activity_num
+                from
                 museum,
-                collection
+                education_activity
             where
-                museum.id = collection.museum_id
-                ${req.query.name ? "and collection.name like ?" : ""}
-                ${req.query.collection_id ? "and collection.id = ?" : ""}
-                ${req.query.museum_id ? "and collection.museum_id = ?" : ""}
-            order by
-                collection.id asc
+                museum.id = education_activity.museum_id
+                ${req.query.name ? "and education_activity.name like ?" : ""}
+                ${req.query.education_activity_id ? "and education_activity.id = ?" : ""}
+                ${req.query.museum_id ? "and education_activity.museum_id = ?" : ""}
             `;
             let param_list = [];
 
             if (req.query.name) param_list.push("%" + req.query.name + "%");
-            if (req.query.collection_id) param_list.push(req.query.collection_id);
+            if (req.query.education_activity_id) param_list.push(req.query.education_activity_id);
             if (req.query.museum_id) param_list.push(req.query.museum_id);
+
 
             done(null, sql, param_list);
         },
-        function getCollectionList(sql, param_list, done) {
-            pool.query(sql, param_list, function (err, collection_num, fileds) {
+        function getEducationActivityNum(sql, param_list, done) {
+            pool.query(sql, param_list, function (err, education_activity_num, fileds) {
                 if (err) {
                     console.error(err);
                     return done(new Error("200"));
                 }
-                done(null, collection_num);
+                done(null, education_activity_num);
             });
         },
-    ], function (err, collection_num) {
+    ], function (err, education_activity_num) {
         if (err) {
             return next(err);
         }
         res.send(return_obj.success({
             msg: "获取藏品数量成功",
-            collection_num: collection_num[0].collection_num
+            collection_num: education_activity_num[0].education_activity_num
         }))
     })
 })
 
 //错误处理
 router.use("/", function (err, req, res, next) {
+    console.log(err);
     switch (err.message) {
         case "100":
             res.send(return_obj.fail("100", "缺少必要的参数"));
