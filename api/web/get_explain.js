@@ -90,6 +90,7 @@ router.get("/", function (req, res, next) {
                 ${req.query.collection_id ? `and \`explain\`.collection_id = ? ` : ``}
                 ${req.query.user_name ? `and user.name like ?` : ""}
                 ${req.query.user_id ? `and user.id = ?` : ""}
+                ${req.query.is_illegal ? `and \`explain\`.is_illegal = ?` : ""}
             order by
                 \`explain\`.id asc
             limit ?
@@ -113,6 +114,9 @@ router.get("/", function (req, res, next) {
             }
             if (req.query.user_id) {
                 param_list.push(req.query.user_id);
+            }
+            if (req.query.is_illegal) {
+                param_list.push(req.query.is_illegal);
             }
 
             let offset = 0; //偏移

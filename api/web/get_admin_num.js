@@ -29,7 +29,7 @@ router.get("/", function (req, res, next) {
         function structureSQL(done) {
             let sql = `
             select
-                count(*) as user_num
+                count(*) as admin_num
             from 
                 user,
                 role
@@ -57,21 +57,21 @@ router.get("/", function (req, res, next) {
             done(null, sql, param_list);
         },
         function getUserList(sql, param_list, done) {
-            pool.query(sql, param_list, function (err, user_num, fileds) {
+            pool.query(sql, param_list, function (err, admin_num, fileds) {
                 if (err) {
                     console.error(err);
                     return done(new Error("200"));
                 }
-                done(null, user_num);
+                done(null, admin_num);
             });
         }
-    ], function (err, user_num) {
+    ], function (err, admin_num) {
         if (err) {
             return next(err);
         }
         res.send(return_obj.success({
             msg: "获取管理员数量成功",
-            user_num: user_num[0].user_num
+            admin_num: admin_num[0].admin_num
         }))
     })
 })

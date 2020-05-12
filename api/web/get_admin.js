@@ -74,21 +74,21 @@ router.get("/", function (req, res, next) {
             done(null, sql, param_list);
         },
         function getUserList(sql, param_list, done) {
-            pool.query(sql, param_list, function (err, user_list, fileds) {
+            pool.query(sql, param_list, function (err, admin_list, fileds) {
                 if (err) {
                     console.error(err);
                     return done(new Error("200"));
                 }
-                done(null, user_list);
+                done(null, admin_list);
             });
         }
-    ], function (err, user_list) {
+    ], function (err, admin_list) {
         if (err) {
             return next(err);
         }
         res.send(return_obj.success({
             msg: "获取管理员列表成功",
-            user_list: user_list
+            admin_list: admin_list
         }))
     })
 })
