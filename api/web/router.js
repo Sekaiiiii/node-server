@@ -38,7 +38,6 @@ router.use("/get_new_num", require("./get_new_num.js"));
 router.use("/get_comment", require("./get_comment.js"));
 router.use("/get_comment_num", require("./get_comment_num.js"));
 
-
 //讲解相关
 router.use("/get_explain", require("./get_explain.js"));
 router.use("/get_explain_num", require("./get_explain_num.js"));
@@ -46,5 +45,9 @@ router.use("/get_explain_num", require("./get_explain_num.js"));
 //用户相关
 router.use("/get_user", require("./get_user.js"));
 router.use("/get_user_num", require("./get_user_num.js"));
+
+//管理员相关
+router.use("/get_admin", require("./get_admin.js"));
+router.use("/get_admin_num", require("./get_admin_num.js"));
 
 module.exports = router;

@@ -29,12 +29,23 @@ router.get("/", function (req, res, next) {
         function structureSQL(done) {
             let sql = `
             select
-                count(*) as user_num
+                user.id as id,
+                user.name as name,
+                user.no_comment as no_comment,
+                user.no_upload_explain as no_upload_explain,
+                user.mail_address as mail_address,
+                role.name as role_name,
+                role.comment_permission as comment_permission,
+                role.upload_explain_permission as upload_explain_permission,
+                role.root_permission as root_permission,
+                role.admin_permission as admin_permission
             from 
                 user,
                 role
             where
                 user.role_id = role.id
+                and role.id >= 1 
+                and role.id <= 2
                 ${req.query.user_name ? "and user.name like ?" : ""}
                 ${req.query.mail_address ? "and user.mail_address like ?" : ""}
                 ${req.query.no_comment ? "and user.no_comment = ?" : ""}
@@ -42,7 +53,10 @@ router.get("/", function (req, res, next) {
                 ${req.query.user_id ? "and user.id = ?" : ""}
             order by
                 user.id
-            
+            limit
+                ?
+            offset 
+                ?
             `
             let param_list = [];
             if (req.query.user_name) param_list.push("%" + req.query.user_name + "%");
@@ -51,25 +65,30 @@ router.get("/", function (req, res, next) {
             if (req.query.no_upload_explain) param_list.push(req.query.no_upload_explain);
             if (req.query.user_id) param_list.push(req.query.user_id);
 
-
+            let limit = 15;
+            let offset = 0;
+            if (req.query.ppn) limit = req.query.ppn * 1;
+            if (req.query.page) offset = (req.query.page - 1) * limit;
+            param_list.push(limit);
+            param_list.push(offset);
             done(null, sql, param_list);
         },
         function getUserList(sql, param_list, done) {
-            pool.query(sql, param_list, function (err, user_num, fileds) {
+            pool.query(sql, param_list, function (err, user_list, fileds) {
                 if (err) {
                     console.error(err);
                     return done(new Error("200"));
                 }
-                done(null, user_num);
+                done(null, user_list);
             });
         }
-    ], function (err, user_num) {
+    ], function (err, user_list) {
         if (err) {
             return next(err);
         }
         res.send(return_obj.success({
-            msg: "获取用户数量成功",
-            user_num: user_num[0].user_num
+            msg: "获取管理员列表成功",
+            user_list: user_list
         }))
     })
 })
@@ -77,7 +96,6 @@ router.get("/", function (req, res, next) {
 
 //错误处理
 router.use("/", function (err, req, res, next) {
-    console.error(err);
     switch (err.message) {
         case "100":
             res.send(return_obj.fail("100", "缺少必要的参数"));

@@ -35,6 +35,8 @@ router.get("/", function (req, res, next) {
                 role
             where
                 user.role_id = role.id
+                and role.id >= 1 
+                and role.id <= 2
                 ${req.query.user_name ? "and user.name like ?" : ""}
                 ${req.query.mail_address ? "and user.mail_address like ?" : ""}
                 ${req.query.no_comment ? "and user.no_comment = ?" : ""}
@@ -51,7 +53,7 @@ router.get("/", function (req, res, next) {
             if (req.query.no_upload_explain) param_list.push(req.query.no_upload_explain);
             if (req.query.user_id) param_list.push(req.query.user_id);
 
-
+            
             done(null, sql, param_list);
         },
         function getUserList(sql, param_list, done) {
@@ -68,7 +70,7 @@ router.get("/", function (req, res, next) {
             return next(err);
         }
         res.send(return_obj.success({
-            msg: "获取用户数量成功",
+            msg: "获取管理员数量成功",
             user_num: user_num[0].user_num
         }))
     })
@@ -77,7 +79,6 @@ router.get("/", function (req, res, next) {
 
 //错误处理
 router.use("/", function (err, req, res, next) {
-    console.error(err);
     switch (err.message) {
         case "100":
             res.send(return_obj.fail("100", "缺少必要的参数"));
