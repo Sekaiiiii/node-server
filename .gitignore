@@ -6,3 +6,9 @@
 /uploads/
 # 忽略eslint
 .eslintrc.js
+# 忽略shell/db_dump
+/shell/db_dump/
+# 忽略shell/db_log
+/shell/db_log
+# 忽略dist
+/dist/
