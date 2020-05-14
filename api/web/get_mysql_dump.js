@@ -20,8 +20,8 @@ router.get("/", verify_login);
 
 //获取列表
 router.get("/", function (req, res, next) {
-    let path = path.join(__dirname, "..", "..", "shell", "db_log");
-    fs.readdir(path, function (err, dir_list) {
+    let dumpPath = path.join(__dirname, "..", "..", "shell", "db_log");
+    fs.readdir(dumpPath, function (err, dir_list) {
         if (err) {
             console.error(err);
             return return_obj.fail("602", "获取数据库备份列表失败");
