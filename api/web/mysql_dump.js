@@ -6,7 +6,7 @@
 */
 'use strict'
 const express = require('express');
-const exec = require("child_process");
+const { exec } = require("child_process");
 const path = require("path");
 
 const pool = require('../../tool/pool.js');
@@ -19,8 +19,8 @@ const router = express.Router();
 router.get("/", verify_login);
 
 router.use("/", function (req, res) {
-    exec(path.join(__dirname , "..","..","shell","db_dump.sh"),(err,stdout,stderr)=>{
-        if(err){
+    exec(path.join(__dirname, "..", "..", "shell", "db_dump.sh"), (err, stdout, stderr) => {
+        if (err) {
             return console.error(`执行错误 ${err}`);
         }
         console.log(stdout);
