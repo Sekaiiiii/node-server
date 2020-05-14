@@ -49,4 +49,9 @@ router.use("/get_user_num", require("./get_user_num.js"));
 router.use("/get_admin", require("./get_admin.js"));
 router.use("/get_admin_num", require("./get_admin_num.js"));
 
+
+//数据库相关
+router.use("/mysql_dump", require("./mysql_dump.js"));
+
+
 module.exports = router;
