@@ -52,6 +52,6 @@ router.use("/get_admin_num", require("./get_admin_num.js"));
 
 //数据库相关
 router.use("/mysql_dump", require("./mysql_dump.js"));
-
+router.use("/get_mysql_dump", require("./get_mysql_dump.js"));
 
 module.exports = router;
