@@ -63,6 +63,7 @@ router.get("/", function (req, res, next) {
             });
         },
         function (museum_list, done) {
+
             if (museum_list.length == 0) {
                 return done(null, museum_list);
             }
@@ -90,8 +91,8 @@ router.get("/", function (req, res, next) {
                             museum_list[i].image_list.push(image_list[j].file);
                         }
                     }
-                    return done(null, museum_list);
                 }
+                return done(null, museum_list);
             });
         },
         function (museum_list, done) {
