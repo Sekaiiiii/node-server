@@ -2,11 +2,11 @@
 * author:谢奇
 * create_day:2020-05-14
 * modified_day:2020-05-14
-* function:
+* function:获取数据库备份列表
 */
 'use strict'
 const express = require('express');
-const { exec } = require("child_process");
+const fs = require("fs");
 const path = require("path");
 
 const pool = require('../../tool/pool.js');
@@ -18,13 +18,18 @@ const router = express.Router();
 //验证登录
 router.get("/", verify_login);
 
-router.use("/", function (req, res) {
-    exec(path.join(__dirname, "..", "..", "shell", "db_dump.sh"), (err, stdout, stderr) => {
+//获取列表
+router.get("/", function (req, res, next) {
+    let path = path.join(__dirname, "..", "..", "shell", "db_log");
+    fs.readdir(path, function (err, dir_list) {
         if (err) {
-            return return_obj.fail("600", "数据库备份失败");
+            console.error(err);
+            return return_obj.fail("602", "获取数据库备份列表失败");
         }
+        console.log(dir_list);
         return_obj.success({
-            msg: "数据库备份成功"
+            msg: "获取数据库备份列表成功",
+            dump_list: dir_list
         })
     })
 })

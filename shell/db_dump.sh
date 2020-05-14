@@ -31,7 +31,7 @@ echo "备份时间为${backtime},备份数据库表 ${DBNAME} 开始" >> ${LOGPA
 #正式备份数据库
 for table in $DBNAME; do
 	source=`mysqldump -u ${DBUSER} -h${DBHOST} -p${DBPASSWD} ${table}> ${LOGPATH}/${backtime}.sql` 2>> ${LOGPATH}/mysqlback.log;
-
+	echo "${source}"
 	#备份成功以下操作 $?获取上一个命令的操作结果，0代表成功
 	if [ "$?" == 0 ];then
 		cd ${LOGPATH}
