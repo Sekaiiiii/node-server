@@ -21,11 +21,11 @@ router.get("/", verify_login);
 router.use("/", function (req, res) {
     exec(path.join(__dirname, "..", "..", "shell", "db_dump.sh"), (err, stdout, stderr) => {
         if (err) {
-            return return_obj.fail("600", "数据库备份失败");
+            return res.send(return_obj.fail("600", "数据库备份失败"));
         }
-        return_obj.success({
+        res.send(return_obj.success({
             msg: "数据库备份成功"
-        })
+        }));
     })
 })
 

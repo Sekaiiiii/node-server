@@ -26,7 +26,6 @@ router.get("/", function (req, res, next) {
             console.error(err);
             return res.send(return_obj.fail("602", "获取数据库备份列表失败"));
         }
-        console.log(dir_list);
         res.send(return_obj.success({
             msg: "获取数据库备份列表成功",
             dump_list: dir_list
