@@ -41,7 +41,7 @@ router.post("/", function (req, res, next) {
             })
         },
         function decompressionFile(tar_path, done) {
-            let command = `tar -zxvf ${tar_path} -C ${__dirname, "..", "..", "shell", "db_dump"}`;
+            let command = `tar -zxvf ${tar_path} -C ${path.join(__dirname, "..", "..", "shell", "db_dump")}`;
             exec(command, function (err, stdout, stderr) {
                 if (err) {
                     console.error(err);
