@@ -86,7 +86,7 @@ router.post("/", function (req, res, next) {
 
 router.use("/", function (err, req, res, next) {
     if (err) {
-        return res.send(return_obj.fail("500", "意料之中的错误"));
+        return res.send(return_obj.fail(err.message, "意料之中的错误"));
     }
 })
 
