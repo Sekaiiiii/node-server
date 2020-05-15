@@ -31,7 +31,6 @@ router.post("/", function (req, res, next) {
     async.waterfall([
         function judgeCompressionFileExist(done) {
             let tar_path = path.join(__dirname, "..", "..", "shell", "db_dump", req.body.name);
-            console.log(tar_path);
             fs.access(tar_path, function (err) {
                 if (err) {
                     console.error(err);
@@ -47,7 +46,6 @@ router.post("/", function (req, res, next) {
                     console.error(err);
                     return done(new Error("604"));
                 }
-                console.log(stdout);
                 done(null);
             })
         },
@@ -55,8 +53,6 @@ router.post("/", function (req, res, next) {
             //对tar_path进行解析
             let sql_name = req.body.name.substr(2, 17) + ".sql";
             let sql_path = path.join(__dirname, "..", "..", "shell", "db_dump", sql_name);
-            console.log(sql_name);
-            console.log(sql_path);
             fs.access(sql_path, function (err) {
                 if (err) {
                     console.error(err);
@@ -72,8 +68,6 @@ router.post("/", function (req, res, next) {
                     console.error(err);
                     return done(new Error("606"));
                 }
-                console.log("完成");
-                console.log(stdout);
                 done(null);
             })
         }
@@ -81,12 +75,29 @@ router.post("/", function (req, res, next) {
         if (err) {
             return next(err);
         }
+        res.send(return_obj.success({
+            msg: "还原数据库成功"
+        }))
     })
 })
 
 router.use("/", function (err, req, res, next) {
-    if (err) {
-        return res.send(return_obj.fail(err.message, "意料之中的错误"));
+    switch (err.message) {
+        case '603':
+            res.send(return_obj.fail("603", "找不到对应的压缩文件"));
+            break;
+        case '604':
+            res.send(return_obj.fail("604", "解压过程出现异常错误"));
+            break;
+        case '605':
+            res.send(return_obj.fail("605", "找不到恢复数据库的sql文件"));
+            break;
+        case '606':
+            res.send(return_obj.fail("606", "恢复数据库的过程出现异常错误"));
+            break;
+        default:
+            res.send(return_obj.fail("500", "出现出乎意料的错误"));
+            break;
     }
 })
 
