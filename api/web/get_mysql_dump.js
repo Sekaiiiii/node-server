@@ -20,7 +20,7 @@ router.get("/", verify_login);
 
 //获取列表
 router.get("/", function (req, res, next) {
-    let dumpPath = path.join(__dirname, "..", "..", "shell", "db_log");
+    let dumpPath = path.join(__dirname, "..", "..", "shell", "db_dump");
     fs.readdir(dumpPath, function (err, dir_list) {
         if (err) {
             console.error(err);
