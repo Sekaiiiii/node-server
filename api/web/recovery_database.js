@@ -30,7 +30,7 @@ router.post("/", function (req, res, next) {
 router.post("/", function (req, res, next) {
     async.waterfall([
         function judgeCompressionFileExist(done) {
-            let tar_path = path.join(__dirname, "..", "..", "shell", "db_dump", req.query.name);
+            let tar_path = path.join(__dirname, "..", "..", "shell", "db_dump", req.body.name);
             console.log(tar_path);
             fs.access(tar_path, function (err) {
                 if (err) {
