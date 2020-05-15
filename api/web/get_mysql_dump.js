@@ -26,17 +26,17 @@ router.get("/", function (req, res, next) {
             console.error(err);
             return res.send(return_obj.fail("602", "获取数据库备份列表失败"));
         }
+        //dir_list进行筛选
+        dir_list = dir_list.filter(item => {
+            let targz_reg = new RegExp("^.*tar\.gz$");
+            return targz_reg.test(item);
+        })
         //将dir_list进行排序
         dir_list.sort(function (a, b) {
             if (a > b) {
                 return -1;
             }
             return 1;
-        })
-        //dir_list进行筛选
-        dir_list.filter(item => {
-            let targz_reg = new RegExp("^.*tar\.gz$");
-            return targz_reg.test(item);
         })
         res.send(return_obj.success({
             msg: "获取数据库备份列表成功",
