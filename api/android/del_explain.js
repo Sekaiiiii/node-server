@@ -1,9 +1,9 @@
 /*
-* author:谢奇
-* create_day:2020-05-08
-* modified_day:2020-05-08
-* function:已登录用户阔以调用该接口删除讲解(自己的讲解)
-*/
+ * author:谢奇
+ * create_day:2020-05-08
+ * modified_day:2020-05-08
+ * function:已登录用户阔以调用该接口删除讲解(自己的讲解)
+ */
 
 'use strict'
 const express = require('express');
@@ -93,8 +93,7 @@ router.post("/", function (req, res, next) {
             fs.access(filepath, function (err) {
                 if (err) {
                     console.error(err);
-                    connect.rollback(function () { });
-                    connect.release();
+                    connect.rollback(() => connect.release());
                     return done(new Error("118"));
                 }
                 done(null, connect, filepath);
@@ -104,8 +103,7 @@ router.post("/", function (req, res, next) {
             fs.unlink(filepath, function (err) {
                 if (err) {
                     console.error(err);
-                    connect.rollback(function () { });
-                    connect.release();
+                    connect.rollback(() => connect.release());
                     return done(new Error("119"));
                 }
                 done(null, connect);
@@ -117,10 +115,10 @@ router.post("/", function (req, res, next) {
         }
         connect.commit(function (err) {
             if (err) {
-                connect.rollback(function () { });
-                connect.release();
+                connect.rollback(() => connect.release());
                 return next(new Error("204"));
             }
+            connect.release();
         })
         res.send(return_obj.success({
             msg: "删除讲解成功"

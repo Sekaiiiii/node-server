@@ -1,9 +1,9 @@
 /*
-* author:谢奇
-* create_day:2020-05-08
-* modified_day:2020-05-08
-* function:已登录用户阔以调用该接口删除评论(自己的评论)
-*/
+ * author:谢奇
+ * create_day:2020-05-08
+ * modified_day:2020-05-08
+ * function:已登录用户阔以调用该接口删除评论(自己的评论)
+ */
 
 'use strict'
 const express = require('express');
@@ -77,8 +77,7 @@ router.post("/", function (req, res, next) {
             connect.query(sql, [req.body.id], function (err, result, fileds) {
                 if (err) {
                     console.error(err);
-                    connect.rollback(function () { });
-                    connect.release();
+                    connect.rollback(() => connect.release());
                     return done(new Error("200"));
                 }
                 //默认成功了
@@ -100,8 +99,7 @@ router.post("/", function (req, res, next) {
             connect.query(sql, [museum_id], function (err, score, fileds) {
                 if (err) {
                     console.error(err);
-                    connect.rollback(function () { });
-                    connect.release();
+                    connect.rollback(() => connect.release());
                     return done(new Error("200"));
                 }
                 done(null, connect, museum_id, score);
@@ -127,8 +125,7 @@ router.post("/", function (req, res, next) {
             connect.query(sql, param_list, function (err, result, fileds) {
                 if (err) {
                     console.error(err);
-                    connect.rollback(function () { });
-                    connect.release();
+                    connect.rollback(() => connect.release());
                     return done(new Error("200"));
                 }
                 done(null, connect);
@@ -140,10 +137,10 @@ router.post("/", function (req, res, next) {
         }
         connect.commit(function (err) {
             if (err) {
-                connect.rollback(function () { });
-                connect.release();
+                connect.rollback(() => connect.release());
                 return next(new Error("204"));
             }
+            connect.release();
             res.send(return_obj.success({
                 msg: "删除评论成功"
             }));

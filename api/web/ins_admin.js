@@ -2,11 +2,12 @@
  * author:谢奇
  * create_day:2020-05-17
  * modified_day:2020-05-17
- * function:设置用户权限
+ * function:设置用户密码
  */
 'use strict'
 const express = require('express');
 const async = require('async');
+const crypto = require('crypto');
 const pool = require('../../tool/pool.js');
 const verify_login = require('../../middleware/verify_login.js')
 const verify_no_login = require('../../middleware/verify_no_login.js');
@@ -19,24 +20,29 @@ router.post("/", verify_login);
 
 //验证参数
 router.post("/", function (req, res, next) {
-    //可能存在的参数有 no_comment no_upload_explain
-    //必须存在的参数有 user_id
-    let id_reg = new RegExp("^\\d+$");
+    //必须存在的参数有name,password,mail_address
+    let password_reg = new RegExp("^[a-zA-Z0-9_]{6,18}$")
+    let name_reg = new RegExp('^[\u4E00-\u9FA5A-Za-z0-9_]{2,18}$');
+    let mail_address_reg = new RegExp('^[a-zA-Z0-9_]+([-+.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([-.][a-zA-Z0-9_]+)*\.[a-zA-Z0-9_]+([-.][a-zA-Z0-9_]+)*$');
 
-    if (!req.body.user_id) {
+    if (!req.body.password) {
         return next(new Error("100"));
     }
-    if (!id_reg.test(req.body.user_id)) {
+    if (!password_reg.test(req.body.password)) {
         return next(new Error("101"));
     }
 
-    if (!req.body.no_comment && !req.body.no_upload_explain) {
+    if (!req.body.name) {
         return next(new Error("100"));
     }
-    if (req.body.no_comment && (req.body.no_comment != "0" && req.body.no_comment != "1")) {
+    if (!name_reg.test(req.body.name)) {
         return next(new Error("101"));
     }
-    if (req.body.no_upload_explain && (req.body.no_upload_explain != "0" && req.body.no_upload_explain != "1")) {
+
+    if (!req.body.mail_address) {
+        return next(new Error("100"));
+    }
+    if (!mail_address_reg.test(req.body.mail_address)) {
         return next(new Error("101"));
     }
     next();
@@ -64,29 +70,28 @@ router.post("/", function (req, res, next) {
                 done(null, connect);
             })
         },
-        function setUserPemission(connect, done) {
+        function insertAdmin(connect, done) {
             let sql = `
-            update
-                user
-            set
-                ?
-            where
-                user.id = ?
-            `
+                insert into user(name,password,no_comment,no_upload_explain,mail_address,role_id) values(?,?,0,0,?,2)
+            `;
             let param_list = [];
-            let set_param = {};
-            if (req.body.no_comment) set_param.no_comment = req.body.no_comment;
-            if (req.body.no_upload_explain) set_param.no_upload_explain = req.body.no_upload_explain;
-            param_list.push(set_param);
-            param_list.push(req.body.user_id);
-            //修改
+            let password_md5 = crypto.createHash('md5').update(req.body.password).digest('hex');
+            param_list.push(req.body.name);
+            param_list.push(password_md5);
+            param_list.push(req.body.mail_address);
+
             connect.query(sql, param_list, (err, result, fileds) => {
                 if (err) {
                     console.error(err);
                     connect.rollback(() => connect.release());
-                    return done(new Error("200"));
+                    if (err.errno == 1062) {
+                        return done(new Error("110"));
+                    } else {
+                        return done(new Error("200"));
+                    }
+
                 }
-                if (result.changedRows == 1) {
+                if (result.affectedRows == 1) {
                     return done(null, connect);
                 } else {
                     connect.rollback(() => connect.release());
@@ -139,7 +144,7 @@ router.post("/", function (req, res, next) {
             }
             connect.release();
             res.send(return_obj.success({
-                msg: "修改用户权限成功"
+                msg: "新建管理员成功"
             }))
         })
     }) //async.waterfall
@@ -155,6 +160,9 @@ router.use("/", function (err, req, res, next) {
             break;
         case "101":
             res.send(return_obj.fail("101", "传入参数格式有误"));
+            break;
+        case "110":
+            res.send(return_obj.fail("110", "用户名已存在"));
             break;
         case "120":
             res.send(return_obj.fail("120", "找不到对应id的评论"));

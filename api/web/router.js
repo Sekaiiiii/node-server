@@ -65,9 +65,10 @@ router.use("/recovery_database", require("./recovery_database.js"));
 // //该接口可以用于修改用户权限
 router.use("/set_user_permission", require("./set_user_permission.js"));
 // //修改管理员密码
-// router.use("/set_admin_password", require("./set_admin_password"));
+router.use("/set_user_password", require("./set_user_password"));
 // //新增管理员
-// router.use("/ins_admin", require("./ins_admin.js"));
+router.use("/ins_admin", require("./ins_admin.js"));
+
 // //数据管理接口
 // //博物馆
 // router.use("/set_museum", require("./set_museum.js"));

@@ -2,11 +2,12 @@
  * author:谢奇
  * create_day:2020-05-17
  * modified_day:2020-05-17
- * function:设置用户权限
+ * function:设置用户密码
  */
 'use strict'
 const express = require('express');
 const async = require('async');
+const crypto = require('crypto');
 const pool = require('../../tool/pool.js');
 const verify_login = require('../../middleware/verify_login.js')
 const verify_no_login = require('../../middleware/verify_no_login.js');
@@ -19,10 +20,9 @@ router.post("/", verify_login);
 
 //验证参数
 router.post("/", function (req, res, next) {
-    //可能存在的参数有 no_comment no_upload_explain
-    //必须存在的参数有 user_id
+    //必须存在的参数有 user_id,password
     let id_reg = new RegExp("^\\d+$");
-
+    let password_reg = new RegExp("^[a-zA-Z0-9_]{6,18}$")
     if (!req.body.user_id) {
         return next(new Error("100"));
     }
@@ -30,13 +30,10 @@ router.post("/", function (req, res, next) {
         return next(new Error("101"));
     }
 
-    if (!req.body.no_comment && !req.body.no_upload_explain) {
+    if (!req.body.password) {
         return next(new Error("100"));
     }
-    if (req.body.no_comment && (req.body.no_comment != "0" && req.body.no_comment != "1")) {
-        return next(new Error("101"));
-    }
-    if (req.body.no_upload_explain && (req.body.no_upload_explain != "0" && req.body.no_upload_explain != "1")) {
+    if (!password_reg.test(req.body.password)) {
         return next(new Error("101"));
     }
     next();
@@ -64,32 +61,36 @@ router.post("/", function (req, res, next) {
                 done(null, connect);
             })
         },
-        function setUserPemission(connect, done) {
+        function setUserPassword(connect, done) {
             let sql = `
             update
                 user
             set
-                ?
+                password = ?
             where
                 user.id = ?
-            `
+            `;
             let param_list = [];
-            let set_param = {};
-            if (req.body.no_comment) set_param.no_comment = req.body.no_comment;
-            if (req.body.no_upload_explain) set_param.no_upload_explain = req.body.no_upload_explain;
-            param_list.push(set_param);
+            //构造密码
+            let password_md5 = crypto.createHash('md5').update(req.body.password).digest('hex');
+            param_list.push(password_md5);
             param_list.push(req.body.user_id);
             //修改
             connect.query(sql, param_list, (err, result, fileds) => {
                 if (err) {
                     console.error(err);
-                    connect.rollback(() => connect.release());
+                    connect.rollback(() => {
+                        connect.release();
+                    });
+
                     return done(new Error("200"));
                 }
                 if (result.changedRows == 1) {
                     return done(null, connect);
                 } else {
-                    connect.rollback(() => connect.release());
+                    connect.rollback(() => {
+                        connect.release();
+                    });
                     return done(new Error("500"));
                 }
             })
@@ -117,13 +118,17 @@ router.post("/", function (req, res, next) {
             connect.query(sql, param_list, (err, result, fileds) => {
                 if (err) {
                     console.error(err);
-                    connect.rollback(() => connect.release());
+                    connect.rollback(() => {
+                        connect.release();
+                    });
                     return done(new Error("200"));
                 }
                 if (result.affectedRows == 1) {
                     done(null, connect);
                 } else {
-                    connect.rollback(() => connect.release());
+                    connect.rollback(() => {
+                        connect.release();
+                    });
                     return done(new Error("500"));
                 }
             })
@@ -139,13 +144,13 @@ router.post("/", function (req, res, next) {
             }
             connect.release();
             res.send(return_obj.success({
-                msg: "修改用户权限成功"
+                msg: "修改用户密码成功"
             }))
         })
     }) //async.waterfall
 })
 
-
+'121.207.223.211:34393'
 //错误处理
 router.use("/", function (err, req, res, next) {
     console.error(err);

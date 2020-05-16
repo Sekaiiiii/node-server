@@ -1,9 +1,9 @@
 /*
-* author:谢奇
-* create_day:2020-05-07
-* modified_day:2020-05-07
-* function:已登录用户发评论
-*/
+ * author:谢奇
+ * create_day:2020-05-07
+ * modified_day:2020-05-07
+ * function:已登录用户发评论
+ */
 'use strict'
 const express = require('express');
 const async = require("async");
@@ -50,8 +50,8 @@ router.post("/", function (req, res, next) {
                 return next(new Error("203"));
             };
             async.waterfall([
-                function (done) {
-                    let sql = `
+                    function (done) {
+                        let sql = `
                     insert into comment(
                         time,
                         content,
@@ -62,33 +62,33 @@ router.post("/", function (req, res, next) {
                         user_id,
                         is_illegal
                     ) value(?,?,?,?,?,?,?,1)`;
-                    let now = new Date();
-                    let time = now.getFullYear() + "-"
-                    time += now.getMonth() + 1 + "-";
-                    time += now.getDate() + "-";
-                    time += now.getHours() + "-";
-                    time += now.getMinutes();
+                        let now = new Date();
+                        let time = now.getFullYear() + "-"
+                        time += now.getMonth() + 1 + "-";
+                        time += now.getDate() + "-";
+                        time += now.getHours() + "-";
+                        time += now.getMinutes();
 
-                    let param_list = [
-                        time,
-                        req.body.content,
-                        req.body.exhibition_score,
-                        req.body.environment_score,
-                        req.body.service_score,
-                        req.body.museum_id,
-                        req.session.uid
-                    ];
-                    connect.query(sql, param_list, function (err, result, filed) {
-                        if (err) {
-                            console.error(err);
-                            return done(new Error("200"));
-                        }
-                        //插入成功
-                        done(null);
-                    });
-                },//step 1
-                function (done) {
-                    let sql = `
+                        let param_list = [
+                            time,
+                            req.body.content,
+                            req.body.exhibition_score,
+                            req.body.environment_score,
+                            req.body.service_score,
+                            req.body.museum_id,
+                            req.session.uid
+                        ];
+                        connect.query(sql, param_list, function (err, result, filed) {
+                            if (err) {
+                                console.error(err);
+                                return done(new Error("200"));
+                            }
+                            //插入成功
+                            done(null);
+                        });
+                    }, //step 1
+                    function (done) {
+                        let sql = `
                     select 
                         avg(exhibition_score) as exhibition_avg_score,
                         avg(environment_score) as environment_avg_score,
@@ -99,16 +99,16 @@ router.post("/", function (req, res, next) {
                         comment.museum_id = ? and
                         comment.is_illegal <= 1
                     `;
-                    connect.query(sql, [req.body.museum_id], function (err, result, filed) {
-                        if (err) {
-                            console.error(err);
-                            return done(new Error("200"));
-                        }
-                        done(null, result);
-                    })
-                },//step 2
-                function (result, done) {
-                    let sql = `
+                        connect.query(sql, [req.body.museum_id], function (err, result, filed) {
+                            if (err) {
+                                console.error(err);
+                                return done(new Error("200"));
+                            }
+                            done(null, result);
+                        })
+                    }, //step 2
+                    function (result, done) {
+                        let sql = `
                         update 
                             museum
                         set
@@ -118,31 +118,29 @@ router.post("/", function (req, res, next) {
                         where
                             id = ?
                     `;
-                    let param_list = [
-                        result[0].exhibition_avg_score,
-                        result[0].environment_avg_score,
-                        result[0].service_avg_score,
-                        req.body.museum_id
-                    ];
-                    connect.query(sql, param_list, function (err, result, fileds) {
-                        if (err) {
-                            console.error(err);
-                            return done(new Error("200"));
-                        }
-                        done(null);
-                    })
-                }//step 3
-            ],
+                        let param_list = [
+                            result[0].exhibition_avg_score,
+                            result[0].environment_avg_score,
+                            result[0].service_avg_score,
+                            req.body.museum_id
+                        ];
+                        connect.query(sql, param_list, function (err, result, fileds) {
+                            if (err) {
+                                console.error(err);
+                                return done(new Error("200"));
+                            }
+                            done(null);
+                        })
+                    } //step 3
+                ],
                 function (err, result) {
                     if (err) {
-                        connect.rollback(function () { });
-                        connect.release();
+                        connect.rollback(() => connect.release());
                         return next(new Error(err.message));
                     }
                     connect.commit(function (err) {
                         if (err) {
-                            connect.rollback(function () { });
-                            connect.release();
+                            connect.rollback(() => connect.release());
                             return next(new Error("204"));
                         }
                         connect.release();
@@ -152,9 +150,9 @@ router.post("/", function (req, res, next) {
                     })
                 }
             )
-        });//async.waterfall
-    });//connect.beginTransaction...
-});//pool.getConnection...
+        }); //async.waterfall
+    }); //connect.beginTransaction...
+}); //pool.getConnection...
 
 //错误处理
 router.use("/", function (err, req, res, next) {
