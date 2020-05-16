@@ -1,9 +1,9 @@
 /*
-* author:谢奇
-* create_day:2020-04-20
-* modified_day:2020-04-22
-* function:路由配置
-*/
+ * author:谢奇
+ * create_day:2020-04-20
+ * modified_day:2020-04-22
+ * function:路由配置
+ */
 "use strict"
 const express = require("express");
 
@@ -15,7 +15,7 @@ router.use("/register", require("./register.js"));
 router.use("/logout", require("./logout.js"));
 
 //博物馆相关
-router.use("/get_museum", require("./get_museum.js"));//(修改第一次)
+router.use("/get_museum", require("./get_museum.js")); //(修改第一次)
 
 //藏品相关
 router.use("/get_collection", require("./get_collection.js"));
@@ -54,5 +54,37 @@ router.use("/get_admin_num", require("./get_admin_num.js"));
 router.use("/mysql_dump", require("./mysql_dump.js"));
 router.use("/get_mysql_dump", require("./get_mysql_dump.js"));
 router.use("/recovery_database", require("./recovery_database.js"));
+
+
+// //以下 设计中
+
+// //获取管理员日志
+// router.use("/get_admin_log", require("./get_admin_log.js"));
+
+// //修改用户信息相关接口
+// //该接口可以用于修改用户权限
+// router.use("/set_user_permission", require("./set_user_permission.js"));
+// //修改用户密码
+// router.use("/set_admin_password", require("./set_admin_password"));
+
+// //数据管理接口
+// //博物馆
+// router.use("/set_museum", require("./set_museum.js"));
+// //藏品
+// router.use("/set_collection", require("./set_collection.js"));
+// //展览
+// router.use("/set_exhibition", require("./set_exhibition.js"));
+// //教育活动
+// router.use("/set_education_activity", require("./set_education_activity.js"));
+// //新闻
+// router.use("/set_new", require("./set_new.js"));
+// //评论
+// router.use("/del_comment", require("./del_comment.js"));
+// router.use("/set_comment", require("./set_comment.js"));
+// //讲解
+// router.use("/del_explain", require("./del_explain.js"));
+// router.use("/set_explain", require("./set_explain.js"));
+
+
 
 module.exports = router;
