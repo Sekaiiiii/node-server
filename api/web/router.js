@@ -63,10 +63,10 @@ router.use("/set_user_password", require("./set_user_password"));
 //新增管理员
 router.use("/ins_admin", require("./ins_admin.js"));
 
-// //以下 设计中
+//获取管理员日志
+router.use("/get_admin_log", require("./get_admin_log.js"));
 
-// //获取管理员日志
-// router.use("/get_admin_log", require("./get_admin_log.js"));
+// //以下 设计中
 
 
 // //数据管理接口
