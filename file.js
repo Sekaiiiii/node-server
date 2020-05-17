@@ -12,7 +12,6 @@ const router = express.Router();
 
 router.get('/', function(req, res, next) {
     // 实现文件下载
-    console.log(req);
     var fileName = req.query.fileName;
     var filePath = path.join(__dirname,"file", fileName);
     var stats = fs.statSync(filePath);
@@ -27,5 +26,4 @@ router.get('/', function(req, res, next) {
       res.end(404);
     }
   });
-  
 module.exports = router;
