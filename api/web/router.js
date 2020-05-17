@@ -66,8 +66,16 @@ router.use("/ins_admin", require("./ins_admin.js"));
 //获取管理员日志
 router.use("/get_admin_log", require("./get_admin_log.js"));
 
-// //以下 设计中
+//评论
+router.use("/del_comment", require("./del_comment.js"));
 
+//讲解
+router.use("/del_explain", require("./del_explain.js"));
+router.use("/set_explain", require("./set_explain.js"));
+
+// // 图片
+// router.use("/del_image", require("./del_image"));
+// router.use("/upload_image", require("./upload_image"));
 
 // //数据管理接口
 // //博物馆
@@ -80,13 +88,6 @@ router.use("/get_admin_log", require("./get_admin_log.js"));
 // router.use("/set_education_activity", require("./set_education_activity.js"));
 // //新闻
 // router.use("/set_new", require("./set_new.js"));
-// //评论
-router.use("/del_comment", require("./del_comment.js"));
-// router.use("/set_comment", require("./set_comment.js"));
-// //讲解
-router.use("/del_explain", require("./del_explain.js"));
-// router.use("/set_explain", require("./set_explain.js"));
-
 
 
 module.exports = router;

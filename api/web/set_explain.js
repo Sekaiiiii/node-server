@@ -20,20 +20,19 @@ router.post("/", verify_login);
 
 //验证参数
 router.post("/", function (req, res, next) {
-    //必须存在的参数有 user_id,password
     let id_reg = new RegExp("^\\d+$");
-    let password_reg = new RegExp("^[a-zA-Z0-9_]{6,18}$")
-    if (!req.body.user_id) {
+
+    if (!req.body.id) {
         return next(new Error("100"));
     }
-    if (!id_reg.test(req.body.user_id)) {
+    if (!id_reg.test(req.body.id)) {
         return next(new Error("101"));
     }
 
-    if (!req.body.password) {
+    if (!req.body.is_illegal) {
         return next(new Error("100"));
     }
-    if (!password_reg.test(req.body.password)) {
+    if (req.body.is_illegal != 0 && req.body.is_illegal != 2) {
         return next(new Error("101"));
     }
     next();
@@ -64,17 +63,15 @@ router.post("/", function (req, res, next) {
         function setUserPassword(connect, done) {
             let sql = `
             update
-                user
+                \`explain\`
             set
-                password = ?
+                is_illegal = ?
             where
-                user.id = ?
+                \`explain\`.id = ?
             `;
             let param_list = [];
-            //构造密码
-            let password_md5 = crypto.createHash('md5').update(req.body.password).digest('hex');
-            param_list.push(password_md5);
-            param_list.push(req.body.user_id);
+            param_list.push(req.body.is_illegal);
+            param_list.push(req.body.id);
             //修改
             connect.query(sql, param_list, (err, result, fileds) => {
                 if (err) {
@@ -111,7 +108,7 @@ router.post("/", function (req, res, next) {
             }
             let content = JSON.stringify(content_obj);
             let time = new Date();
-            let time_str = `${time.getFullYear()}-${time.getMonth()+1}-${time.getDate()} ${time.getHours()}:${time.getMinutes()}:${time.getSeconds()}`;
+            let time_str = `${time.getFullYear()}-${time.getMonth() + 1}-${time.getDate()} ${time.getHours()}:${time.getMinutes()}:${time.getSeconds()}`;
             param_list.push(content);
             param_list.push(time_str);
             param_list.push(req.session.user_id);
@@ -144,11 +141,12 @@ router.post("/", function (req, res, next) {
             }
             connect.release();
             res.send(return_obj.success({
-                msg: "修改用户密码成功"
+                msg: "修改讲解成功"
             }))
         })
     }) //async.waterfall
 })
+
 
 //错误处理
 router.use("/", function (err, req, res, next) {
