@@ -12,3 +12,5 @@
 /shell/db_log
 # 忽略dist
 /dist/
+# 忽略file
+/file/

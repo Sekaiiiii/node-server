@@ -13,5 +13,5 @@ const router = express.Router();
 
 //路由配置
 router.use("/api",require("./api/router"));
-
+router.use("/file",require("./file.js"));
 module.exports = router;
