@@ -145,7 +145,6 @@ router.get("/", function (req, res, next) {
 
 //错误处理
 router.use("/", function (err, req, res, next) {
-    console.error(err);
     switch (err.message) {
         case "100":
             res.send(return_obj.fail("100", "缺少必要的参数"));
