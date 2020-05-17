@@ -73,9 +73,9 @@ router.use("/del_comment", require("./del_comment.js"));
 router.use("/del_explain", require("./del_explain.js"));
 router.use("/set_explain", require("./set_explain.js"));
 
-// // 图片
-// router.use("/del_image", require("./del_image"));
-// router.use("/upload_image", require("./upload_image"));
+// 图片
+router.use("/del_image", require("./del_image"));
+router.use("/upload_image", require("./upload_image"));
 
 // //数据管理接口
 // //博物馆
