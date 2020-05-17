@@ -81,10 +81,10 @@ router.use("/ins_admin", require("./ins_admin.js"));
 // //新闻
 // router.use("/set_new", require("./set_new.js"));
 // //评论
-// router.use("/del_comment", require("./del_comment.js"));
+router.use("/del_comment", require("./del_comment.js"));
 // router.use("/set_comment", require("./set_comment.js"));
 // //讲解
-// router.use("/del_explain", require("./del_explain.js"));
+router.use("/del_explain", require("./del_explain.js"));
 // router.use("/set_explain", require("./set_explain.js"));
 
 
