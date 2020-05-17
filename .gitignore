@@ -14,3 +14,5 @@
 /dist/
 # 忽略file
 /file/
+# 忽略release_conf配置文件
+/config/release_conf.js
