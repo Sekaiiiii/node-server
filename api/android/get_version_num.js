@@ -6,15 +6,21 @@
  */
 'use strict'
 const express = require('express');
+const fs = require("fs");
+const path = require("path");
 const return_obj = require('../../tool/return_obj.js');
-const release_conf = require("../../config/release_conf.js");
+
 
 const router = express.Router();
 
 router.get("/", function (req, res, next) {
+    let json_file = fs.readFileSync(path.join(__dirname,"..", "..", "config", "release_conf.json"));
+    let json_obj = JSON.parse(json_file);
     res.send(return_obj.success({
         msg: "获取版本号成功",
-        version: release_conf.version
+        version: json_obj.version,
+        name: json_obj.name,
+        description: json_obj.description
     }))
 });
 

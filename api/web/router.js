@@ -55,19 +55,19 @@ router.use("/mysql_dump", require("./mysql_dump.js"));
 router.use("/get_mysql_dump", require("./get_mysql_dump.js"));
 router.use("/recovery_database", require("./recovery_database.js"));
 
+//修改用户信息相关接口
+//修改用户权限
+router.use("/set_user_permission", require("./set_user_permission.js"));
+//修改管理员密码
+router.use("/set_user_password", require("./set_user_password"));
+//新增管理员
+router.use("/ins_admin", require("./ins_admin.js"));
 
 // //以下 设计中
 
 // //获取管理员日志
 // router.use("/get_admin_log", require("./get_admin_log.js"));
 
-// //修改用户信息相关接口
-// //该接口可以用于修改用户权限
-router.use("/set_user_permission", require("./set_user_permission.js"));
-// //修改管理员密码
-router.use("/set_user_password", require("./set_user_password"));
-// //新增管理员
-router.use("/ins_admin", require("./ins_admin.js"));
 
 // //数据管理接口
 // //博物馆
