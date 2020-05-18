@@ -98,10 +98,7 @@ router.get("/", function (req, res, next) {
         function (museum_list, done) {
             //0名字首字母 
             if (req.query.order_by == 0) {
-                museum_list.sort(function (a, b) {
-                    if (a.name > b.name) return -1;
-                    return 1;
-                })
+                museum_list.sort(function (a, b) { return a.name.toString().localeCompare(b.name, "zh") })
                 return done(null, museum_list);
             }
             //1展览数量
