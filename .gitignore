@@ -1,5 +1,5 @@
 # 忽略node_modules
-/node_modules
+/node_modules/
 # 忽略public
 /public/
 # 忽略uploads
