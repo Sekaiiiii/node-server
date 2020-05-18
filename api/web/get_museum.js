@@ -47,6 +47,7 @@ router.get("/", function (req, res, next) {
                 museum.exhibition_score as exhibition_score,
                 museum.environment_score as environment_score,
                 museum.service_score as service_score,
+                museum.position_id as position_id,
                 position.name as position_name,
                 position.longitude as longitude,
                 position.latitude as latitude
