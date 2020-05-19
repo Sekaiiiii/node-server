@@ -65,7 +65,7 @@ router.get("/", function (req, res, next) {
                 ${req.query.id ? `and museum_has_new.museum_id = ? ` : ``}
                 ${req.query.name ? `and new.title like ? ` : ``}
             order by
-                new.time asc
+                new.time desc
             limit ?
             offset ?
             `;

@@ -22,7 +22,7 @@ router.post("/", function (req, res, next) {
     //可能存在的参数有 no_comment no_upload_explain
     //必须存在的参数有 user_id
     let id_reg = new RegExp("^\\d+$");
-
+    
     if (!req.body.user_id) {
         return next(new Error("100"));
     }
