@@ -10,7 +10,6 @@ const express = require('express');
 const async = require("async");
 const pool = require('../../tool/pool.js');
 const verify_login = require('../../middleware/verify_login.js')
-const verify_no_login = require('../../middleware/verify_no_login.js');
 const return_obj = require('../../tool/return_obj.js');
 const router = express.Router();
 
@@ -58,15 +57,15 @@ router.post("/", function (req, res, next) {
             connect.query(sql, [req.body.id], function (err, comment, fileds) {
                 if (err) {
                     console.error(err);
-                    connect.release();
+                    connect.rollback(() => connect.release());
                     return done(new Error("203"));
                 }
                 if (comment.length == 0) {
-                    connect.release();
+                    connect.rollback(() => connect.release());
                     return done(new Error("120"));
                 }
                 if (comment[0].user_id != req.session.uid) {
-                    connect.release();
+                    connect.rollback(() => connect.release());
                     return done(new Error("121"));
                 }
                 done(null, connect, comment[0].museum_id);
