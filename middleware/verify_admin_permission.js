@@ -9,7 +9,7 @@ const return_obj = require("../tool/return_obj.js")
 
 module.exports = function (req, res, next) {
     if (req.session.admin_permission != undefined) {
-        if (req.session.admin_permission == 0) {
+        if (req.session.admin_permission == 1) {
             return next();
         }
         return res.send(return_obj.fail("96", "用户不具有管理员权限"));

@@ -9,7 +9,7 @@ const return_obj = require("../tool/return_obj.js")
 
 module.exports = function (req, res, next) {
     if (req.session.root_permission != undefined) {
-        if (req.session.root_permission == 0) {
+        if (req.session.root_permission == 1) {
             return next();
         }
         return res.send(return_obj.fail("95", "用户不具有超级管理员权限"));
