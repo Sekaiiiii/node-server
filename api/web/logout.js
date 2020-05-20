@@ -9,7 +9,7 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../../tool/pool.js');
 const verify_login = require('../../middleware/verify_login.js')
-const verify_no_login = require('../../middleware/verify_no_login.js');
+const verify_admin_permission = require("../../middleware/verify_admin_permission");
 const return_obj = require('../../tool/return_obj.js');
 
 //登录状态验证

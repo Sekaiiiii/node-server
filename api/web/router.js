@@ -11,7 +11,6 @@ const router = express.Router();
 
 //路由配置
 router.use("/login", require("./login.js"));
-router.use("/register", require("./register.js"));
 router.use("/logout", require("./logout.js"));
 
 //博物馆相关

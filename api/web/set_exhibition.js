@@ -7,16 +7,18 @@
 'use strict'
 const express = require('express');
 const async = require('async');
-const crypto = require('crypto');
 const pool = require('../../tool/pool.js');
 const verify_login = require('../../middleware/verify_login.js')
-const verify_no_login = require('../../middleware/verify_no_login.js');
+const verify_admin_permission = require("../../middleware/verify_admin_permission");
 const return_obj = require('../../tool/return_obj.js');
 
 const router = express.Router();
 
 //验证登录
 router.post("/", verify_login);
+
+//验证权限
+router.post("/", verify_admin_permission);
 
 //验证参数
 router.post("/", function (req, res, next) {

@@ -68,7 +68,7 @@ router.post("/", function (req, res) {
             req.session.uid = user_list[0].id;
             req.session.name = user_list[0].name;
             req.session.no_comment = user_list[0].no_comment;
-            req.session.no_upload_session = user_list[0].no_session;
+            req.session.no_upload_explain = user_list[0].no_upload_explain;
             req.session.mail_address = user_list[0].mail_address;
             req.session.root_permission = user_list[0].root_permission;
             req.session.admin_permission = user_list[0].admin_permission;

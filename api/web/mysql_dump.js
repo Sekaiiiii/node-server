@@ -11,12 +11,15 @@ const path = require("path");
 
 const pool = require('../../tool/pool.js');
 const verify_login = require('../../middleware/verify_login.js')
-const verify_no_login = require('../../middleware/verify_no_login.js');
+const verify_root_permission = require("../../middleware/verify_root_permission");
 const return_obj = require('../../tool/return_obj.js');
 const router = express.Router();
 
 //验证登录
 router.get("/", verify_login);
+
+//验证权限
+router.get("/", verify_root_permission);
 
 router.use("/", function (req, res) {
     exec(path.join(__dirname, "..", "..", "shell", "db_dump.sh"), (err, stdout, stderr) => {

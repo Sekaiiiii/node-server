@@ -11,13 +11,15 @@ const fs = require("fs");
 const path = require("path");
 const pool = require('../../tool/pool.js');
 const verify_login = require('../../middleware/verify_login.js')
-const verify_no_login = require('../../middleware/verify_no_login.js');
+const verify_upload = require("../../middleware/verify_upload.js");
 const return_obj = require('../../tool/return_obj.js');
 const multer_conf = require("../../config/multer_conf.js");
 const router = express.Router();
 
 //验证登录态
 router.post("/", verify_login);
+//验证上传权限
+router.post("/", verify_upload);
 
 //创建mupload
 const upload = multer(multer_conf.android).single('music');
@@ -32,7 +34,7 @@ router.post("/", function (req, res, next) {
             if (err.code == "LIMIT_FILE_COUNT") {
                 return res.send(return_obj.fail("116", "上传文件超出数量限制"));
             }
-            return res.send(return_obj.fail("500","出乎意料的错误"));
+            return res.send(return_obj.fail("500", "出乎意料的错误"));
         }
         next();
     })

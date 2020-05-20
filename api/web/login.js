@@ -44,9 +44,13 @@ router.post("/", function (req, res) {
             user.mail_address,
             role.admin_permission,
             role.root_permission
-    from user,role
-    where user.role_id = role.id
-    and user.name = ?
+    from 
+        user,
+        role
+    where 
+        user.role_id = role.id
+        and user.role_id != 3
+        and user.name = ?
     `
     pool.query(sql, [req.body.name], function (err, user_list, fileds) {
         if (err) {
