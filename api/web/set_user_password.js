@@ -71,7 +71,8 @@ router.post("/", function (req, res, next) {
             set
                 password = ?
             where
-                user.id = ?
+                user.role_id != 1
+                and user.id = ?
             `;
             let param_list = [];
             //构造密码

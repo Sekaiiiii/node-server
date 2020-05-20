@@ -74,7 +74,8 @@ router.post("/", function (req, res, next) {
             set
                 ?
             where
-                user.id = ?
+                user.role_id != 1
+                and user.id = ?
             `
             let param_list = [];
             let set_param = {};
