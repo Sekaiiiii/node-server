@@ -14,7 +14,7 @@ const router = express.Router();
 
 //运行helloworld脚本
 router.get("/start_server", function (req, res, next) {
-    const sh = spawn(`sh ${path.join(__dirname, "..", "..", "shell", "scrapy_server.sh")}`);
+    const sh = spawn("sh" ,[`${path.join(__dirname, "..", "..", "shell", "scrapy_server.sh")}`]);
     sh.stdout.once('data',function(data){
         res.send(data);
         sh.removeAllListeners();
