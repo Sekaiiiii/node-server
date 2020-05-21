@@ -81,7 +81,7 @@ router.post("/", function (req, res) {
                 user_id: user_list[0].id,
                 name: user_list[0].name,
                 mail_address: user_list[0].mail_address,
-                root_permission: user_list[0].mail_address,
+                root_permission: user_list[0].root_permission,
                 admin_permission: user_list[0].admin_permission
             }));
         } else {
