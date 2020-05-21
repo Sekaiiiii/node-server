@@ -12,6 +12,7 @@ const router = express.Router();
 //路由配置
 router.use("/login", require("./login.js"));
 router.use("/logout", require("./logout.js"));
+router.use("/get_login_state", require("./get_login_state"));
 
 //博物馆相关
 router.use("/set_museum", require("./set_museum.js"));
