@@ -8,42 +8,36 @@
 const express = require('express');
 const pool = require('../../tool/pool.js'); // mysql请求的库
 const path = require("path");
-const { exec } = require('child_process');
+const { exec, spawn } = require('child_process');
 
 const router = express.Router();
 
 //运行helloworld脚本
-
 router.get("/start_server", function (req, res, next) {
-    exec(`sh ${path.join(__dirname, "..", "..", "shell", "scrapy_server.sh")}`, function (err, stdout, stderr) {
-        if (err) {
-            return res.send(err);
-        }
-        return res.send({
-            stdout: stdout,
-            stderr: stderr
-        });
+    const sh = spawn(`sh ${path.join(__dirname, "..", "..", "shell", "scrapy_server.sh")}`);
+    sh.stdout.once('data',function(data){
+        res.send(data);
+        sh.removeAllListeners();
     });
+    sh.stderr.once('data',function(data){
+        res.send(data);
+        sh.removeAllListeners();
+    })
+    sh.on('error',function(err){
+        res.send(err);
+        sh.removeAllListeners();
+    })
 })
 
 
-
-
 router.get("/start_spider", function (req, res, next) {
-    // if (req.query.startTime)
-    //     command += `-d museum=${req.query.museum}`
-    // if (req.query.startTime)
-    //     command += `-d startTime=${req.query.startTime}`
-    // if (req.query.endTime)
-    //     command += `-d endTime=${req.query.endTime}`
-    
-    command = `sh ${path.join(__dirname,"..","..","shell","spider.sh")} 
-                 ${req.query.museum ? `${req.query.museum}` : "" } 
-                 ${req.query.startTime ? `${req.query.startTime}` : "" }
-                 ${req.query.endTime ? `${req.query.endTime}` : "" }
+    command = `sh ${path.join(__dirname, "..", "..", "shell", "spider.sh")} 
+                 ${req.query.museum ? `${req.query.museum}` : ""} 
+                 ${req.query.startTime ? `${req.query.startTime}` : ""}
+                 ${req.query.endTime ? `${req.query.endTime}` : ""}
             `;
 
-    exec(command, (err, stdout, stderr) => {
+    spawn(command, (err, stdout, stderr) => {
         if (err) {
             return res.send(err);
         }
