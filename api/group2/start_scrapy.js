@@ -15,7 +15,7 @@ const router = express.Router();
 //运行helloworld脚本
 
 router.get("/start_server", function (req, res, next) {
-    exec(path.join(__dirname, "..", "..", "shell", "scrapy_server.sh"), function (err, stdout, stderr) {
+    exec(`sh ${path.join(__dirname, "..", "..", "shell", "scrapy_server.sh")}`, function (err, stdout, stderr) {
         if (err) {
             return res.send(err);
         }
@@ -37,7 +37,7 @@ router.get("/start_spider", function (req, res, next) {
     // if (req.query.endTime)
     //     command += `-d endTime=${req.query.endTime}`
     
-    command = `${path.join(__dirname,"..","..","shell","spider.sh")} 
+    command = `sh ${path.join(__dirname,"..","..","shell","spider.sh")} 
                  ${req.query.museum ? `${req.query.museum}` : "" } 
                  ${req.query.startTime ? `${req.query.startTime}` : "" }
                  ${req.query.endTime ? `${req.query.endTime}` : "" }
